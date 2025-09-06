@@ -1,0 +1,25 @@
+# Ensure consistent LF endings
+* text=auto eol=lf
+
+# Binary files
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.tif binary
+*.tiff binary
+*.arw binary
+*.mp4 binary
+*.mov binary
+*.wav binary
+*.mp3 binary
+
+# Preserve CSV as text (no diff noise from CRLF)
+*.csv text eol=lf
+
+# Normalize shell / SQL / Python
+*.sh text eol=lf
+*.sql text eol=lf
+*.py text eol=lf
+
+# Encourages GitHub to treat scripts as shell
+scripts/* linguist-language=Shell

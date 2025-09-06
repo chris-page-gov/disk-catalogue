@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+.eggs/
+*.egg
+.build/
+build/
+dist/
+.python-version
+.venv/
+venv/
+.env
+.env.*
+
+# Unit test / coverage
+.coverage*
+htmlcov/
+.cache/
+pytest_cache/
+.mypy_cache/
+
+# macOS
+.DS_Store
+.AppleDouble
+.Spotlight-V100
+.Trashes
+
+# VS Code
+.vscode/
+.history/
+
+# Logs
+logs/
+*.log
+
+# Output artefacts
+/output/*.csv
+/output/*.parquet
+/catalogue.duckdb*
+
+# Local data dumps
+*.dump
+*.bak
+
+# Temporary
+/tmp/
+*.swp
+~$*
+
+# Node (if any future UI work adds it)
+node_modules/
+
+# Coverage reports
+coverage.xml
+
+# Lock files (uv generates .venv, but keep optional)
+pm-debug.log*
+
+# Generated docs
+site/
+

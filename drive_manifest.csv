@@ -1,0 +1,3 @@
+drive_label,platform_mount,volume_uuid,serial_number,notes
+Drive_01,mac:/Volumes/Drive_01 | win:E:\,,,5TB WD Blue (spinning)
+Drive_02,mac:/Volumes/Drive_02 | win:F:\,,,20TB WD Elements (archive)

@@ -1,0 +1,28 @@
+{
+  "name": "disk-catalogue",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "mounts": [
+    "source=/Volumes,target=/host/Volumes,type=bind,consistency=cached"
+  ],
+  "remoteUser": "vscode",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "installJupyterlab": true,
+      "version": "3.11"
+    }
+  },
+  "postCreateCommand": "chmod +x scripts/*.sh || true && echo 'Using uv for dependency tasks'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "tamasfe.even-better-toml",
+  "EditorConfig.EditorConfig",
+  "charliermarsh.ruff"
+      ]
+    }
+  }
+}

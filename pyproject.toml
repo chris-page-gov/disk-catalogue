@@ -1,0 +1,41 @@
+[project]
+name = "disk-catalogue"
+version = "0.1.0"
+description = "Tools to catalogue disks and query metadata via DuckDB"
+authors = [ { name = "Your Name", email = "you@example.com" } ]
+readme = "README_cataloguing.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+  "duckdb",
+  "pandas"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pytest-cov",
+  "mypy",
+  "ruff",
+  "black"
+]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W", "I", "B", "C4", "UP", "RUF"]
+
+[tool.black]
+line-length = 100
+
+[tool.pytest.ini_options]
+addopts = "-ra -q --cov=disk_catalogue --cov-report=term-missing"
+pythonpath = ["src"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+packages = ["disk_catalogue"]
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
