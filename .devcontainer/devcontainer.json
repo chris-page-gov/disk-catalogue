@@ -5,7 +5,7 @@
     "dockerfile": "Dockerfile",
     "context": ".."
   },
-  "postCreateCommand": "uv pip install -e .[dev] || true",
+  "postCreateCommand": "pip install --user -e .[dev] || true",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -16,6 +16,6 @@
     }
   },
   "mounts": [
-    "source=/Volumes,target=/host/Volumes,type=bind,consistency=cached"
+    "source=/Volumes,target=/host/Volumes,type=bind,consistency=cached,readonly"
   ]
 }
