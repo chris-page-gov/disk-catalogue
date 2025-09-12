@@ -23,7 +23,6 @@ exiftool -r -csv -fast3 \
   -HandlerDescription -CompressorName -VideoCodec -VideoFrameRate -VideoFrameCount \
   -ImageWidth -ImageHeight -AudioFormat -AudioChannels -AudioSampleRate -BitRate \
   -SourceFile \
-  -Drive="$DRIVE_ID" \
   "$DRIVE_PATH" > "$OUT_DIR/videos_${DRIVE_ID}_${DATE_STR}.csv"
 
 echo "[videos] Wrote $OUT_DIR/videos_${DRIVE_ID}_${DATE_STR}.csv"

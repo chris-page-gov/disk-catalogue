@@ -26,7 +26,6 @@ exiftool -r -csv -fast3 \
   -GPSLatitude -GPSLongitude \
   -Rating -Label -XMP-dc:Title -Keywords -HierarchicalSubject \
   -SourceFile \
-  -Drive="$DRIVE_ID" \
   "$DRIVE_PATH" > "$OUT_DIR/photos_${DRIVE_ID}_${DATE_STR}.csv"
 
 echo "[photos] Wrote $OUT_DIR/photos_${DRIVE_ID}_${DATE_STR}.csv"

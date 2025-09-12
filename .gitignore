@@ -36,8 +36,9 @@ logs/
 *.log
 
 # Output artefacts
-/output/*.csv
-/output/*.parquet
+# Ignore CSV/Parquet in output/ at any depth
+/output/**/*.csv
+/output/**/*.parquet
 /catalogue.duckdb*
 
 # Local data dumps
@@ -60,4 +61,3 @@ pm-debug.log*
 
 # Generated docs
 site/
-

@@ -5,8 +5,9 @@ Usage:
   python scripts/load_csvs.py [--db catalogue.duckdb] [--dir output]
 
 Behavior:
-  - Creates tables if they do not exist (photos_raw, videos_raw).
   - Loads all matching CSVs (photos_*.csv, videos_*.csv) incrementally.
+  - Creates target tables on first ingest using the CSV schema.
+  - If schemas drift, adds missing columns and aligns on insert.
   - Skips files already recorded in an ingestion log table.
 """
 from __future__ import annotations
@@ -22,13 +23,6 @@ PHOTO_TABLE = "photos_raw"
 VIDEO_TABLE = "videos_raw"
 LOG_TABLE = "ingested_files"
 
-PHOTO_SCHEMA = """
-CREATE TABLE IF NOT EXISTS photos_raw AS SELECT * FROM (SELECT ''::TEXT as SourceFile) WHERE FALSE;
-"""
-# We'll let DuckDB auto-create columns based on CSV import; using a staging read first.
-VIDEO_SCHEMA = """
-CREATE TABLE IF NOT EXISTS videos_raw AS SELECT * FROM (SELECT ''::TEXT as SourceFile) WHERE FALSE;
-"""
 LOG_SCHEMA = f"""
 CREATE TABLE IF NOT EXISTS {LOG_TABLE} (
   file_path TEXT PRIMARY KEY,
@@ -38,8 +32,6 @@ CREATE TABLE IF NOT EXISTS {LOG_TABLE} (
 
 
 def ensure_schema(con: duckdb.DuckDBPyConnection) -> None:
-    con.execute(PHOTO_SCHEMA)
-    con.execute(VIDEO_SCHEMA)
     con.execute(LOG_SCHEMA)
 
 
@@ -55,13 +47,83 @@ def already_ingested(con: duckdb.DuckDBPyConnection) -> set[str]:
     return {r[0] for r in rows}
 
 
+def table_exists(con: duckdb.DuckDBPyConnection, table: str) -> bool:
+    q = """
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'main' AND table_name = ?
+    LIMIT 1
+    """
+    return con.execute(q, [table]).fetchone() is not None
+
+
+def get_table_columns(con: duckdb.DuckDBPyConnection, table: str) -> list[tuple[str, str]]:
+    # Returns list of (name, type)
+    rows = con.execute(f"PRAGMA table_info('{table}')").fetchall()
+    # duckdb pragma: cid, name, type, notnull, dflt_value, pk
+    return [(r[1], r[2]) for r in rows]
+
+
+def get_view_columns(con: duckdb.DuckDBPyConnection, view: str) -> list[tuple[str, str]]:
+    rows = con.execute(f"DESCRIBE {view}").fetchall()
+    # columns: column_name, column_type, null, key, default, extra
+    return [(r[0], r[1]) for r in rows]
+
+
+def qident(name: str) -> str:
+    # Quote an identifier for DuckDB (handles spaces, #, :, - etc.)
+    return '"' + name.replace('"', '""') + '"'
+
+
 def ingest_file(con: duckdb.DuckDBPyConnection, path: Path, table: str) -> None:
-    # Read CSV with auto-detected schema into a relation then append
+    # Read CSV with auto-detected schema into a relation, create staging view
     rel = con.read_csv(str(path), header=True, auto_detect=True)
     rel.create_view("_staging_ingest", replace=True)
-    con.execute(f"INSERT INTO {table} SELECT * FROM _staging_ingest")
-    con.execute("DROP VIEW _staging_ingest")
-    con.execute("INSERT INTO ingested_files(file_path) VALUES (?)", [str(path)])
+
+    try:
+        if not table_exists(con, table):
+            # Create target table with the same schema as the CSV (empty table)
+            con.execute(f"CREATE TABLE {table} AS SELECT * FROM _staging_ingest WHERE FALSE")
+        else:
+            # Align schemas if needed
+            tgt_cols = get_table_columns(con, table)
+            stg_cols = get_view_columns(con, "_staging_ingest")
+            tgt_names = [n for n, _ in tgt_cols]
+            stg_dict = {n: t for n, t in stg_cols}
+
+            # Add any missing columns from staging to target (using staging type)
+            for name, typ in stg_cols:
+                if name not in tgt_names:
+                    con.execute(f"ALTER TABLE {table} ADD COLUMN {qident(name)} {typ}")
+            # Refresh target columns after ALTERs
+            tgt_cols = get_table_columns(con, table)
+            tgt_names = [n for n, _ in tgt_cols]
+
+            # Build aligned select list over staging
+            select_exprs: list[str] = []
+            for name, typ in tgt_cols:
+                if name in stg_dict:
+                    select_exprs.append(qident(name))
+                else:
+                    select_exprs.append(f"NULL::{typ} AS {qident(name)}")
+
+            select_sql = ", ".join(select_exprs)
+            con.execute(f"INSERT INTO {table} SELECT {select_sql} FROM _staging_ingest")
+            con.execute("DROP VIEW _staging_ingest")
+            con.execute("INSERT INTO ingested_files(file_path) VALUES (?)", [str(path)])
+            return
+
+        # Fresh table path: insert all columns directly
+        con.execute(f"INSERT INTO {table} SELECT * FROM _staging_ingest")
+        con.execute("DROP VIEW _staging_ingest")
+        con.execute("INSERT INTO ingested_files(file_path) VALUES (?)", [str(path)])
+    except Exception:
+        # Ensure staging view is dropped on error to avoid name clashes later
+        try:
+            con.execute("DROP VIEW _staging_ingest")
+        except Exception:
+            pass
+        raise
 
 
 def main() -> None:
