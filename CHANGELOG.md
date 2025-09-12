@@ -8,11 +8,16 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ### Added
 
-- Initial project scaffolding: devcontainer, Dockerfile, testing setup (pytest, mypy, ruff, black), uv install.
-- Basic file scanner (`scan_path`).
-- Documentation: `COPILOT_INSTRUCTIONS.md`.
+- See below.
 
-## [0.1.0] - 2025-09-06
+
+## [0.1.1] - 2025-09-12
+
+### Added
+
+- Release after Unreleased changes.
+
+ - 2025-09-06
 
 ### Initial Release
 

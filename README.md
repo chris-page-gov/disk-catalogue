@@ -1,5 +1,8 @@
 # Disk Catalogue
 
+Version: 0.1.1
+
+
 Early-stage toolkit for scanning mounted volumes and exploring metadata (paths, sizes) via DuckDB.
 
 ## Quick Start (Dev Container)

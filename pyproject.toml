@@ -1,6 +1,6 @@
 [project]
 name = "disk-catalogue"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tools to catalogue disks and query metadata via DuckDB"
 authors = [ { name = "Your Name", email = "you@example.com" } ]
 readme = "README_cataloguing.md"

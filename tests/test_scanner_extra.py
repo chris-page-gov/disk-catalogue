@@ -1,7 +1,12 @@
+import pytest
+from pathlib import Path
+from typing import Iterator, cast
+
+import disk_catalogue.scanner as scanner
 from disk_catalogue import scan_path
 
 
-def test_scan_path_skips_on_oserror(tmp_path, monkeypatch):
+def test_scan_path_skips_on_oserror(tmp_path: Path, monkeypatch: "pytest.MonkeyPatch"):
     # Create one real file
     (tmp_path / "good.txt").write_text("ok")
 
@@ -13,15 +18,16 @@ def test_scan_path_skips_on_oserror(tmp_path, monkeypatch):
             raise OSError("simulated stat failure")
 
     # Capture the real files from the real iter_files behaviour
-    real_files = [p for p in tmp_path.rglob("*") if p.is_file()]
+    real_files: list[Path] = [p for p in tmp_path.rglob("*") if p.is_file()]
 
-    def fake_iter_files(root):
+    def fake_iter_files(root: Path) -> Iterator[Path]:
         for p in real_files:
             yield p
-        yield BadPath()
+        # Cast BadPath to Path so the generator return type matches Iterator[Path]
+        yield cast(Path, BadPath())
 
     # Monkeypatch iter_files to include our bad path
-    monkeypatch.setattr("disk_catalogue.scanner.iter_files", fake_iter_files)
+    monkeypatch.setattr(scanner, "iter_files", fake_iter_files)
 
     records = list(scan_path(tmp_path))
 
