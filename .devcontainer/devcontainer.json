@@ -1,28 +1,21 @@
 {
+  // Dev Container for disk-catalogue
   "name": "disk-catalogue",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": ".."
   },
-  "mounts": [
-    "source=/Volumes,target=/host/Volumes,type=bind,consistency=cached"
-  ],
-  "remoteUser": "vscode",
-  "features": {
-    "ghcr.io/devcontainers/features/python:1": {
-      "installJupyterlab": true,
-      "version": "3.11"
-    }
-  },
-  "postCreateCommand": "chmod +x scripts/*.sh || true && echo 'Using uv for dependency tasks'",
+  "postCreateCommand": "uv pip install -e .[dev] || true",
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
-        "ms-toolsai.jupyter",
-        "tamasfe.even-better-toml",
-  "EditorConfig.EditorConfig",
-  "charliermarsh.ruff"
+        "ms-python.vscode-pylance",
+        "esbenp.prettier-vscode"
       ]
     }
-  }
+  },
+  "mounts": [
+    "source=/Volumes,target=/host/Volumes,type=bind,consistency=cached"
+  ]
 }

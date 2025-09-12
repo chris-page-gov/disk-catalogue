@@ -13,17 +13,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
     git \
+    coreutils \
     && rm -rf /var/lib/apt/lists/*
 
 # Symlink fd (fd-find installs 'fdfind')
 RUN if [ ! -e /usr/local/bin/fd ]; then ln -s /usr/bin/fdfind /usr/local/bin/fd; fi
 
 # Install uv (fast Python package/dependency manager)
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh -s -- -y && \
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
     mv /root/.local/bin/uv /usr/local/bin/uv && \
     rm -rf /root/.local
 
-# Install baseline dev tooling with pip during image build (more reproducible)
+# Install baseline dev tooling with pip during image build
 RUN pip install --no-cache-dir \
     pytest pytest-cov \
     mypy \
@@ -38,10 +39,5 @@ RUN mkdir -p /workspaces/disk-catalogue/scripts
 
 WORKDIR /workspaces/disk-catalogue
 
-# Pre-create a dedicated virtual environment for the project (optional; uv can also manage ephemeral envs)
-RUN python -m venv .venv
-ENV VIRTUAL_ENV=/workspaces/disk-catalogue/.venv
-ENV PATH="/workspaces/disk-catalogue/.venv/bin:${PATH}"
-
-# Default command
-CMD ["sleep", "infinity"]
+# Keep the container alive for VS Code to attach
+CMD ["tail", "-f", "/dev/null"]
