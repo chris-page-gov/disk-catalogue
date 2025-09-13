@@ -1,5 +1,10 @@
 # Disk Catalogue
 
+[![CI](https://github.com/chris-page-gov/disk-catalogue/actions/workflows/ci.yml/badge.svg)](https://github.com/chris-page-gov/disk-catalogue/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/chris-page-gov/disk-catalogue?sort=semver)](https://github.com/chris-page-gov/disk-catalogue/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](pyproject.toml)
+
 Version: 0.1.3
 
 

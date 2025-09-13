@@ -9,6 +9,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 ### Added
 
 - Pending.
+ - Docs: add CI status badge to README; document coverage badge setup.
 
 ## [0.1.3] - 2025-09-13
 

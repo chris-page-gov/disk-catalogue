@@ -58,6 +58,16 @@ What runs (see `.github/workflows/ci.yml`):
 - CI produces `coverage.xml` and uploads it as a build artifact.
 - View terminal summary in job logs; download `coverage-xml` artifact for detailed inspection or integration with external tools.
 
+### Badges
+- CI status badge is included in README and points at `.github/workflows/ci.yml`.
+- Coverage percentage badges require an external service (e.g., Codecov). To enable:
+  1. Create a Codecov account and add this repository.
+  2. Add the Codecov upload step to CI (with `codecov/codecov-action`) and a `CODECOV_TOKEN` secret if required.
+  3. Add the Codecov badge to README (example):
+     ```markdown
+     [![codecov](https://codecov.io/gh/<owner>/disk-catalogue/branch/main/graph/badge.svg)](https://codecov.io/gh/<owner>/disk-catalogue)
+     ```
+
 Targets Python 3.11 to match the project requirement.
 
 ## Releases via CI
