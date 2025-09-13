@@ -36,7 +36,9 @@ logs/
 *.log
 
 # Output artefacts
-# Ignore CSV/Parquet in output/ at any depth
+# Ignore everything under output/ at any depth (generated scan results)
+/output/
+# Explicit patterns retained for clarity
 /output/**/*.csv
 /output/**/*.parquet
 /catalogue.duckdb*
@@ -44,7 +46,12 @@ logs/
 # Local data dumps
 *.dump
 *.bak
+# Local drive manifest(s) — untracked, machine-specific
 /drive_manifest.csv
+/drives_manifest.csv
+# Ignore any drive_manifest*.csv variants at root, except the template
+/drive_manifest*.csv
+!/drive_manifest.template.csv
 
 # Temporary
 /tmp/
