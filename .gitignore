@@ -44,6 +44,7 @@ logs/
 # Local data dumps
 *.dump
 *.bak
+/drive_manifest.csv
 
 # Temporary
 /tmp/

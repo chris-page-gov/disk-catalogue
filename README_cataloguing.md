@@ -46,7 +46,21 @@ Give each drive a human‑readable label and capture a **stable identifier**:
   Get-PhysicalDisk | Select-Object SerialNumber, FriendlyName
   ```
 
-Put these in `drive_manifest.csv` (provided) so the index always knows **which volume** a file lives on.
+Copy the template to create a local manifest (untracked):
+
+```bash
+cp drive_manifest.template.csv drive_manifest.csv
+```
+
+Then edit `drive_manifest.csv` with your drive label, mounts and optional identifiers so the index
+always knows **which volume** a file lives on. The file is gitignored to avoid committing
+machine-specific details.
+
+Or generate entries from currently mounted volumes inside the Dev Container:
+
+```bash
+python scripts/make_manifest.py
+```
 
 ---
 
@@ -114,3 +128,54 @@ You can repeatedly append new scan CSVs; the schema creates staging tables (`*_r
 - `drive_manifest.csv` – fill this with your drive labels/IDs before scanning.
 
 If you want, we can add **misc‑file** capture and a small **web UI** later.
+
+---
+
+## Dev Container Orchestrated Scan (Recommended)
+
+Inside the dev container, use the one‑shot command per drive:
+
+```bash
+python scripts/scan_and_ingest.py --drive Ext-10
+```
+
+It will:
+
+- Run an all‑files scan (fast; CSV to `output/<drive>/files_*.csv`).
+- Derive photo/video path lists from the files CSV and extract rich metadata only for those files.
+- Ingest all CSVs and create views `files`, `photos`, `videos` with derived columns:
+  - `Drive`, `RelativePath`, `RelativeDirectory`, `FileExt`.
+  - `FileKey = hash(Drive, RelativePath, FileSize#)` — stable per‑file ID on a drive.
+- Record or update the drive snapshot in a `drives` table (label, mount, UUID, serial, notes, timestamp).
+- Append a `drive_scans` history row (start/end time, status, CSV paths, row counts).
+
+Re‑runs skip tables already ingested for that drive; pass `--force` to rescan.
+
+If the drive label isn’t in your manifest yet, you can auto-update from mounted volumes:
+
+```bash
+python scripts/scan_and_ingest.py --drive Ext-10 --update-manifest
+```
+
+### Duplicates 101
+
+- Candidates by size:
+
+```bash
+duckdb catalogue.duckdb -c "select \"FileSize#\" bytes, count(*) n, count(distinct Drive) drives from files group by 1 having n>1 order by n desc, bytes desc limit 50;"
+```
+
+- Candidates by name + size:
+
+```bash
+duckdb catalogue.duckdb -c "select lower(FileName) name, \"FileSize#\" bytes, count(*) n, list(distinct Drive) drives from files group by 1,2 having n>1 order by n desc, bytes desc limit 50;"
+```
+
+- Cross-drive pairs (same name + size):
+
+```bash
+duckdb catalogue.duckdb -c "select a.Drive a_drive, b.Drive b_drive, a.RelativePath a_path, b.RelativePath b_path, a.\"FileSize#\" bytes from files a join files b on a.\"FileSize#\"=b.\"FileSize#\" and lower(a.FileName)=lower(b.FileName) and a.Drive<b.Drive limit 50;"
+```
+
+For exact duplicate verification, add a `file_checksums` table with content hashes (MD5/SHA256)
+keyed by (Drive, RelativePath, FileSize#) and group by checksum.

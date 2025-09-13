@@ -1,0 +1,7 @@
+drive_label,platform_mount,volume_uuid,serial_number,notes
+Ext-10,mac:/Volumes/Ext-10 | win:E:\,<optional-volume-uuid>,<optional-serial>,Primary external photo/video archive
+
+# Copy this file to drive_manifest.csv and edit per machine.
+# platform_mount accepts multiple entries separated by " | ", e.g.:
+#   mac:/Volumes/YourDrive | win:F:\
+# Only the mac path is used inside the Dev Container (mapped to /host/Volumes/...).

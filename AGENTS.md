@@ -32,8 +32,41 @@
 - PRs: include clear description, linked issues, and before/after notes. For data/CLI changes, show example command/output.
 - Run `scripts/lint.sh` and `pytest` locally before opening a PR.
 
+## Docs & Changelog Sync
+- Always update `CHANGELOG.md` (Unreleased) for user-visible changes: new scripts/CLI flags, schema/view changes, devcontainer behavior, or Git ignore patterns.
+- Keep docs current when code changes:
+  - `README.md`: quick start, catalogue/queries examples, new commands.
+  - `README_cataloguing.md`: end-to-end workflow, orchestrator usage, identifiers (`Drive`, `RelativePath`, `FileKey`).
+  - `sample_queries.sql`: add/edit queries if views/columns change.
+  - Script headers (`scripts/*.sh`, `scripts/*.py`): usage and outputs.
+- If you touch devcontainer or mounts, note it in README “Dev Container” and in the changelog.
+- Do not bump version; maintainers will cut releases. Leave changes under [Unreleased].
+
+## Changelog, Versioning, and Commit Practices
+- Working changes (non-release):
+  - Append to `CHANGELOG.md` under `[Unreleased]` with clear bullets (Added/Changed/Fixed/Removed).
+  - Commit with a docs-focused message, e.g.: `docs(changelog): note ingest view changes and new scan script`.
+  - Ensure docs/tests align with the changelog entry.
+- Preparing a release (maintainers):
+  1) Sync with the default branch: `git fetch origin && git switch main && git rebase origin/main`.
+  2) Choose the next SemVer. Update in two places:
+     - `pyproject.toml` → `[project].version`
+     - `src/disk_catalogue/__init__.py` → `__version__`
+  3) Finalize `CHANGELOG.md`:
+     - Move items from `[Unreleased]` to a new `## [x.y.z] - YYYY-MM-DD` section.
+     - Leave `[Unreleased]` in place for future work (empty or with a placeholder).
+  4) Commit with a concise release message whose body mirrors the changelog bullets:
+     - Subject: `chore(release): vX.Y.Z`
+     - Body: copy the `Added/Changed/Fixed` bullets from the new section.
+     - Example:
+       - `chore(release): v0.1.2` + body listing each change exactly as in the changelog.
+  5) Tag the release: `git tag -a vX.Y.Z -m "Release vX.Y.Z"` and push: `git push && git push --tags`.
+  6) Verify: run `scripts/lint.sh`, `scripts/run_tests.sh`, and a quick schema validate.
+- Post‑release: start adding new items back under `[Unreleased]` for subsequent PRs.
+
 ## Security & Configuration Tips
 - Do not commit secrets or local paths; `.env*`, output CSVs, and DuckDB files are gitignored.
+- Do not commit real drive manifests. Commit `drive_manifest.template.csv`; keep `drive_manifest.csv` untracked (gitignored).
 - When scanning drives, prefer the dev container and read‑only mounts (see `build.md`).
 - Large data belongs in `output/` and stays out of version control.
 

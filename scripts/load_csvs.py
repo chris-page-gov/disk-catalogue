@@ -18,9 +18,11 @@ from pathlib import Path
 
 PHOTO_PREFIX = "photos_"
 VIDEO_PREFIX = "videos_"
+FILE_PREFIX = "files_"
 
 PHOTO_TABLE = "photos_raw"
 VIDEO_TABLE = "videos_raw"
+FILE_TABLE = "files_raw"
 LOG_TABLE = "ingested_files"
 
 LOG_SCHEMA = f"""
@@ -126,6 +128,61 @@ def ingest_file(con: duckdb.DuckDBPyConnection, path: Path, table: str) -> None:
         raise
 
 
+def ensure_derived_views(con: duckdb.DuckDBPyConnection) -> None:
+    # Create convenient views with derived identifiers and drive/path parsing
+    con.execute(
+        r'''
+        CREATE OR REPLACE VIEW files AS
+        SELECT
+          *,
+          regexp_extract("SourceFile", '/host/Volumes/([^/]+)/', 1) AS Drive,
+          regexp_replace("SourceFile", '^/host/Volumes/[^/]+/', '') AS RelativePath,
+          regexp_extract("Directory", '/host/Volumes/[^/]+/(.*)$', 1) AS RelativeDirectory,
+          lower(regexp_extract("FileName", '\\.([^.]+)$', 1)) AS FileExt,
+          hash(
+            regexp_extract("SourceFile", '/host/Volumes/([^/]+)/', 1),
+            regexp_replace("SourceFile", '^/host/Volumes/[^/]+/', ''),
+            CAST("FileSize#" AS BIGINT)
+          ) AS FileKey
+        FROM files_raw;
+        '''
+    )
+    con.execute(
+        r'''
+        CREATE OR REPLACE VIEW photos AS
+        SELECT
+          *,
+          regexp_extract("SourceFile", '/host/Volumes/([^/]+)/', 1) AS Drive,
+          regexp_replace("SourceFile", '^/host/Volumes/[^/]+/', '') AS RelativePath,
+          regexp_extract("Directory", '/host/Volumes/[^/]+/(.*)$', 1) AS RelativeDirectory,
+          lower(regexp_extract("FileName", '\\.([^.]+)$', 1)) AS FileExt,
+          hash(
+            regexp_extract("SourceFile", '/host/Volumes/([^/]+)/', 1),
+            regexp_replace("SourceFile", '^/host/Volumes/[^/]+/', ''),
+            CAST("FileSize#" AS BIGINT)
+          ) AS FileKey
+        FROM photos_raw;
+        '''
+    )
+    con.execute(
+        r'''
+        CREATE OR REPLACE VIEW videos AS
+        SELECT
+          *,
+          regexp_extract("SourceFile", '/host/Volumes/([^/]+)/', 1) AS Drive,
+          regexp_replace("SourceFile", '^/host/Volumes/[^/]+/', '') AS RelativePath,
+          regexp_extract("Directory", '/host/Volumes/[^/]+/(.*)$', 1) AS RelativeDirectory,
+          lower(regexp_extract("FileName", '\\.([^.]+)$', 1)) AS FileExt,
+          hash(
+            regexp_extract("SourceFile", '/host/Volumes/([^/]+)/', 1),
+            regexp_replace("SourceFile", '^/host/Volumes/[^/]+/', ''),
+            CAST("FileSize#" AS BIGINT)
+          ) AS FileKey
+        FROM videos_raw;
+        '''
+    )
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default="catalogue.duckdb", help="DuckDB database path")
@@ -142,6 +199,7 @@ def main() -> None:
 
     photo_files = list_targets(out_dir, PHOTO_PREFIX)
     video_files = list_targets(out_dir, VIDEO_PREFIX)
+    file_files = list_targets(out_dir, FILE_PREFIX)
 
     added = 0
     for path in photo_files:
@@ -154,7 +212,14 @@ def main() -> None:
             continue
         ingest_file(con, path, VIDEO_TABLE)
         added += 1
+    for path in file_files:
+        if str(path) in ingested:
+            continue
+        ingest_file(con, path, FILE_TABLE)
+        added += 1
 
+    # Create/refresh derived views for convenience and stable identifiers
+    ensure_derived_views(con)
     print(f"Ingestion complete. New files ingested: {added}")
 
 
