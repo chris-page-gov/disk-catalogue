@@ -50,9 +50,15 @@ def load_manifest(manifest_path: Path) -> dict[str, ManifestEntry]:
 
 
 def to_container_path(mac_path: str) -> str:
-    # Map host mac path /Volumes/... to container /host/Volumes/...
-    if mac_path.startswith("/Volumes/"):
-        return mac_path.replace("/Volumes/", "/host/Volumes/", 1)
+    # Map host mac path /Volumes/... to container /host/Volumes/... only if available
+    try:
+        from pathlib import Path as _P
+
+        if mac_path.startswith("/Volumes/") and _P("/host/Volumes").exists():
+            return mac_path.replace("/Volumes/", "/host/Volumes/", 1)
+    except Exception:
+        # On any error determining environment, fall back to original path
+        pass
     return mac_path
 
 
@@ -226,7 +232,13 @@ def main() -> None:
     if entry.mac_mount:
         drive_path = to_container_path(entry.mac_mount)
     else:
-        drive_path = f"/host/Volumes/{args.drive}"
+        # Prefer container path when running inside dev container; otherwise use native mac path
+        container_root = Path("/host/Volumes")
+        drive_path = (
+            str(container_root / args.drive)
+            if container_root.exists()
+            else f"/Volumes/{args.drive}"
+        )
 
     drive_path_p = Path(drive_path)
     if not drive_path_p.exists():

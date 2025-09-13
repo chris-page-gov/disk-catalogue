@@ -18,6 +18,15 @@ Early-stage toolkit for scanning mounted volumes and exploring metadata (paths, 
 4. Run tests: `pytest`.
 5. Format & lint: `ruff check . && ruff format .` (or `black .`).
 
+### Note on open files after scans
+
+- When running inside the Dev Container, macOS' Virtualization.framework and Spotlight can briefly hold file descriptors on recently scanned files. You may see `lsof` entries for the container VM (Virtualization.framework) or Spotlight (mds/mdworker).
+- Mitigations:
+  - Stop the Dev Container/VM after scans (VS Code: Dev Containers: Stop Container). This releases virtualization-held FDs.
+  - Optionally pause Spotlight on the volume: `sudo mdutil -i off "/Volumes/<Drive>"` and re-enable later.
+  - Run scans on the host (outside the container): the tooling now auto-detects environment and will use native `/Volumes/...` when `/host/Volumes` is unavailable.
+  - Use ephemeral containers for scanning so the process exits immediately after completing the job.
+
 ## Catalogue A Drive
 
 1. Ensure the drive is visible in the container: `ls /host/Volumes/Ext-10`.
@@ -36,6 +45,8 @@ python scripts/scan_and_ingest.py --drive Ext-10
 
 This writes CSVs under `output/Ext-10/` and ingests them into DuckDB. Re-run later; it skips
 already ingested tables for that drive. Use `--force` to rescan.
+
+Output files under `output/` are generated and ignored by Git (entire directory is excluded).
 
 Tip: If the drive label isn’t in your manifest yet, add `--update-manifest`:
 

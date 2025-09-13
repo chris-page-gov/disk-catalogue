@@ -8,8 +8,13 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ### Added
 
-- Pending.
- - Docs: add CI status badge to README; document coverage badge setup.
+- Docs: README note about virtualization/Spotlight holding files after scans and mitigation steps.
+- Host-run support: `scan_and_ingest.py` auto-detects environment and avoids remapping `/Volumes` when not in the dev container.
+
+### Changed
+
+- Git ignore: ignore entire `output/` directory (all generated files, e.g. lists), not just CSV/Parquet.
+- Git ignore: ignore `drive_manifest.csv`, `drives_manifest.csv`, and other `drive_manifest*.csv` variants (keep `drive_manifest.template.csv` tracked).
 
 ## [0.1.3] - 2025-09-13
 
