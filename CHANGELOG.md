@@ -10,6 +10,13 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Pending.
 
+## [0.1.3] - 2025-09-13
+
+### Added
+
+- CI workflow: lint (Ruff), format checks (Ruff/Black), mypy, and pytest on push/PR.
+- CI coverage reporting: generates `coverage.xml` and uploads as artifact.
+
 ## [0.1.2] - 2025-09-13
 
 ### Added

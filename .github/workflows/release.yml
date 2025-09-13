@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install build tooling
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+
+      - name: Build distributions
+        run: python -m build
+
+      - name: Generate release notes from CHANGELOG.md
+        id: notes
+        shell: bash
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME}"
+          VERSION="${TAG_NAME#v}"
+          echo "Tag: $TAG_NAME, Version: $VERSION"
+          if [ -f CHANGELOG.md ]; then
+            awk -v ver="$VERSION" '
+              BEGIN{found=0}
+              /^## \[/{ if(found) exit }
+              $0 ~ "^## \\[" ver "\\]" { found=1; next }
+              found { print }
+            ' CHANGELOG.md > RELEASE_BODY.md || true
+          fi
+          if [ ! -s RELEASE_BODY.md ]; then
+            echo "Release $TAG_NAME" > RELEASE_BODY.md
+            echo >> RELEASE_BODY.md
+            echo "See CHANGELOG.md for details." >> RELEASE_BODY.md
+          fi
+          echo "body_path=RELEASE_BODY.md" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*
+          name: ${{ github.ref_name }}
+          body_path: ${{ steps.notes.outputs.body_path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

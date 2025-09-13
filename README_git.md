@@ -43,6 +43,47 @@ Make executable:
 chmod +x .git/hooks/pre-commit
 ```
 
-## Next CI Step
+## Continuous Integration (CI)
 
-Add a GitHub Actions workflow to run lint + type check + tests on push / PR.
+This repository runs lint, type checks, and tests on every push and pull request.
+
+What runs (see `.github/workflows/ci.yml`):
+- Ruff lint (`ruff check .`)
+- Ruff format check (`ruff format --check .`)
+- Black check (`black --check .`)
+- Mypy type checking (`mypy .`)
+- Pytest (with coverage flags from `pyproject.toml`)
+
+### Coverage Reporting
+- CI produces `coverage.xml` and uploads it as a build artifact.
+- View terminal summary in job logs; download `coverage-xml` artifact for detailed inspection or integration with external tools.
+
+Targets Python 3.11 to match the project requirement.
+
+## Releases via CI
+
+This repository publishes releases automatically when you push a tag like `v0.1.2`.
+
+Steps (maintainers):
+
+1. Update code + docs and edit `CHANGELOG.md` under `[Unreleased]`.
+2. Bump version in `pyproject.toml` and `src/disk_catalogue/__init__.py`.
+3. Finalize the changelog: move items to a new `## [x.y.z] - YYYY-MM-DD` section.
+4. Commit and push to `main`:
+   ```bash
+   git add -A
+   git commit -m "chore(release): vX.Y.Z"
+   git push
+   ```
+5. Create and push the tag (triggers the workflow):
+   ```bash
+   git tag -a vX.Y.Z -m "Release vX.Y.Z"
+   git push --tags
+   ```
+
+What CI does:
+- Builds sdist/wheel under `dist/`.
+- Extracts the matching section from `CHANGELOG.md` as release notes.
+- Creates a GitHub Release named after the tag and uploads `dist/*`.
+
+Find it under GitHub → Releases.

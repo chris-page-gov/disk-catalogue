@@ -64,6 +64,14 @@
   6) Verify: run `scripts/lint.sh`, `scripts/run_tests.sh`, and a quick schema validate.
 - Post‑release: start adding new items back under `[Unreleased]` for subsequent PRs.
 
+## CI Releases
+- This repo includes a GitHub Actions workflow that creates a Release on tag push (`v*`).
+- The workflow:
+  - Builds Python distributions (`dist/*`).
+  - Extracts the notes for the matching version from `CHANGELOG.md`.
+  - Publishes a GitHub Release and uploads `dist/*` as assets.
+- To publish: follow the release steps above and push the tag. The action runs automatically.
+
 ## Security & Configuration Tips
 - Do not commit secrets or local paths; `.env*`, output CSVs, and DuckDB files are gitignored.
 - Do not commit real drive manifests. Commit `drive_manifest.template.csv`; keep `drive_manifest.csv` untracked (gitignored).
