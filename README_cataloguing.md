@@ -157,6 +157,9 @@ If the drive label isn’t in your manifest yet, you can auto-update from mounte
 python scripts/scan_and_ingest.py --drive Ext-10 --update-manifest
 ```
 
+Note on NTFS/AppleDouble
+- On macOS writing to non-APFS/HFS volumes (e.g., NTFS), Finder creates AppleDouble files prefixed with `._` for resource forks, plus other hidden/system items (e.g., `.DS_Store`, `$RECYCLE.BIN`). The orchestrated scans now skip these to reduce noisy "File not found" messages from ExifTool and avoid polluting the derived photo/video lists. This does not affect your actual media files.
+
 ### Duplicates 101
 
 - Candidates by size:

@@ -17,7 +17,7 @@ mkdir -p "$OUT_DIR"
 
 # Video metadata export (core technical + container usage)
 set +e
-exiftool -r -csv -fast3 -m \
+exiftool -r -csv -fast3 -m -q -q \
   -ext mp4 -ext mov -ext mxf -ext avi -ext mpg -ext mpeg -ext mts -ext mkv \
   -FileName -Directory -FilePath -FileSize# -MIMEType \
   -FileInode -FileModifyDate -FileCreateDate \

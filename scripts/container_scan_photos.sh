@@ -17,7 +17,7 @@ mkdir -p "$OUT_DIR"
 
 # ExifTool fast recursive photo metadata export
 set +e
-exiftool -r -csv -fast3 -m \
+exiftool -r -csv -fast3 -m -q -q \
   -ext arw -ext arq -ext srx -ext sr2 -ext cr2 -ext raf -ext nef -ext dng \
   -ext jpg -ext jpeg -ext tiff -ext tif -ext png -ext heic -ext heif \
   -FileName -Directory -FilePath -FileSize# -MIMEType \

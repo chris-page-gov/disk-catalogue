@@ -6,7 +6,18 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
-- (no changes yet)
+_No changes yet._
+
+## [0.1.5] - 2025-09-14
+
+### Added
+
+- Docs: add `SCHEMA_REFERENCE.md` with explicit per-view column listings and precise `FileKey` type (UBIGINT); generator `scripts/generate_schema_reference.py` to regenerate from live DuckDB.
+
+### Changed
+
+- Scans now run ExifTool in quiet mode (`-q -q`) to suppress non-fatal "File not found" noise from NTFS AppleDouble artifacts while still capturing valid files.
+- Media lists: skip `._*`/`.__*` and common hidden files when deriving photo/video path lists from the files CSV to prevent passing bogus AppleDouble paths to ExifTool.
 
 ## [0.1.4] - 2025-09-14
 

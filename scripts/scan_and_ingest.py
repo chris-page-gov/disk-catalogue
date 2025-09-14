@@ -134,6 +134,11 @@ def derive_lists_from_files_csv(files_csv: Path, outdir_drive: Path) -> tuple[Pa
             src = (row.get("SourceFile") or row.get("SourceFile") or "").strip()
             if not src:
                 continue
+            # Skip AppleDouble and common hidden/system files that can appear on NTFS/macOS
+            name = Path(src).name
+            # Skip dot-underscore and dot-double-underscore AppleDouble variants and common hidden files
+            if name.startswith("._") or name.startswith(".__") or name in {".DS_Store", "Thumbs.db", "desktop.ini"}:
+                continue
             ext = Path(src).suffix.lower().lstrip(".")
             if ext in PHOTO_EXT:
                 fp.write(src + "\n")

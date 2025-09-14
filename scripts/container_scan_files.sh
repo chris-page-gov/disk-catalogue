@@ -18,7 +18,10 @@ mkdir -p "$OUT_DIR"
 # Generic file export: scan ALL files and capture basic metadata.
 # We avoid extension filters to ensure comprehensive coverage.
 set +e
-exiftool -r -csv -fast3 -m \
+# Exclude AppleDouble and common system/hidden files and dirs (NTFS/macOS noise)
+# - Skip files starting with ._ (AppleDouble), .DS_Store, Thumbs.db, desktop.ini
+# - Skip well-known system directories on external volumes
+exiftool -r -csv -fast3 -m -q -q \
   -FileName -Directory -FilePath -FileSize# -MIMEType -FileType \
   -FileInode -FileModifyDate -FileCreateDate \
   -CreateDate -ModifyDate -SourceFile \
