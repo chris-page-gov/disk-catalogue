@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](pyproject.toml)
 
-Version: 0.1.3
+Version: 0.1.4
 
 
 Early-stage toolkit for scanning mounted volumes and exploring metadata (paths, sizes) via DuckDB.
@@ -16,7 +16,9 @@ Early-stage toolkit for scanning mounted volumes and exploring metadata (paths, 
 2. Reopen in container when prompted.
 3. (Optional) Install dependencies editable: `uv pip install -e .[dev]` or `pip install -e .[dev]`.
 4. Run tests: `pytest`.
-5. Format & lint: `ruff check . && ruff format .` (or `black .`).
+5. Lint/format/type-check:
+   - Quick: `scripts/lint.sh`
+   - Auto-fix imports/formatting: `scripts/lint.sh --fix`
 
 ### Note on open files after scans
 

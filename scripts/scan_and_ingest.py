@@ -2,32 +2,34 @@
 """Scan a drive and ingest results into DuckDB using the manifest.
 
 Usage:
-  python scripts/scan_and_ingest.py --drive Ext-10 [--db catalogue.duckdb] [--manifest drive_manifest.csv] [--outdir output]
+  python scripts/scan_and_ingest.py --drive Ext-10 \
+    [--db catalogue.duckdb] [--manifest drive_manifest.csv] [--outdir output]
 
 Behavior:
   - Looks up the drive in the manifest (by drive_label).
   - Resolves the container path (prefers mac path under /host/Volumes).
   - Skips scan/ingest if the drive already has rows in any target table, unless --force.
-  - Runs three scans (files, photos, videos) and then ingests from the drive-specific output folder.
+  - Runs three scans (files, photos, videos) and then ingests from the drive-specific
+    output folder.
 """
+
 from __future__ import annotations
 
 import argparse
 import csv
+import csv as _csv
 import subprocess
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 import duckdb
-import csv as _csv
-from datetime import datetime
 
 
 @dataclass
 class ManifestEntry:
     drive_label: str
-    mac_mount: Optional[str]
+    mac_mount: str | None
 
 
 def load_manifest(manifest_path: Path) -> dict[str, ManifestEntry]:
@@ -37,7 +39,7 @@ def load_manifest(manifest_path: Path) -> dict[str, ManifestEntry]:
         for row in reader:
             label = (row.get("drive_label") or "").strip()
             platform = (row.get("platform_mount") or "").strip()
-            mac_mount: Optional[str] = None
+            mac_mount: str | None = None
             # Parse a token like: "mac:/Volumes/Ext-10 | win:E:\\"
             for token in platform.split("|"):
                 token = token.strip()
@@ -85,26 +87,48 @@ def run(cmd: list[str]) -> None:
     subprocess.run(cmd, check=True)
 
 
-def latest_csv(outdir_drive: Path, prefix: str) -> Optional[Path]:
+def latest_csv(outdir_drive: Path, prefix: str) -> Path | None:
     candidates = sorted(outdir_drive.glob(f"{prefix}*.csv"))
     return candidates[-1] if candidates else None
 
 
 PHOTO_EXT = {
-    "arw", "arq", "srx", "sr2", "cr2", "raf", "nef", "dng",
-    "jpg", "jpeg", "tiff", "tif", "png", "heic", "heif",
+    "arw",
+    "arq",
+    "srx",
+    "sr2",
+    "cr2",
+    "raf",
+    "nef",
+    "dng",
+    "jpg",
+    "jpeg",
+    "tiff",
+    "tif",
+    "png",
+    "heic",
+    "heif",
 }
 VIDEO_EXT = {
-    "mp4", "mov", "mxf", "avi", "mpg", "mpeg", "mts", "mkv",
+    "mp4",
+    "mov",
+    "mxf",
+    "avi",
+    "mpg",
+    "mpeg",
+    "mts",
+    "mkv",
 }
 
 
 def derive_lists_from_files_csv(files_csv: Path, outdir_drive: Path) -> tuple[Path, Path]:
     photos_list = outdir_drive / "photos_list.txt"
     videos_list = outdir_drive / "videos_list.txt"
-    with files_csv.open(newline="", encoding="utf-8") as f, \
-            photos_list.open("w", encoding="utf-8") as fp, \
-            videos_list.open("w", encoding="utf-8") as fv:
+    with (
+        files_csv.open(newline="", encoding="utf-8") as f,
+        photos_list.open("w", encoding="utf-8") as fp,
+        videos_list.open("w", encoding="utf-8") as fv,
+    ):
         reader = _csv.DictReader(f)
         for row in reader:
             src = (row.get("SourceFile") or row.get("SourceFile") or "").strip()
@@ -118,7 +142,7 @@ def derive_lists_from_files_csv(files_csv: Path, outdir_drive: Path) -> tuple[Pa
     return photos_list, videos_list
 
 
-def count_csv_rows(p: Optional[Path]) -> int:
+def count_csv_rows(p: Path | None) -> int:
     if not p or not p.exists():
         return 0
     try:
@@ -154,9 +178,9 @@ def insert_drive_scan(
     started_at: datetime,
     ended_at: datetime,
     status: str,
-    files_csv: Optional[Path],
-    photos_csv: Optional[Path],
-    videos_csv: Optional[Path],
+    files_csv: Path | None,
+    photos_csv: Path | None,
+    videos_csv: Path | None,
 ) -> None:
     ensure_drive_scans_table(con)
     con.execute(
@@ -186,45 +210,69 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--drive", required=True, help="Drive label in manifest (e.g., Ext-10)")
     ap.add_argument("--db", default="catalogue.duckdb", help="DuckDB database path")
+    ap.add_argument("--manifest", default="drive_manifest.csv", help="Path to drive manifest CSV")
     ap.add_argument(
-        "--manifest", default="drive_manifest.csv", help="Path to drive manifest CSV"
+        "--outdir",
+        default="output",
+        help="Base output directory for CSVs",
     )
-    ap.add_argument("--outdir", default="output", help="Base output directory for CSVs")
-    ap.add_argument("--update-manifest", action="store_true", help="If drive is missing from manifest, attempt to update it by scanning mounted volumes")
-    ap.add_argument("--prefix", default="", help="Optional label prefix when auto-updating the manifest")
-    ap.add_argument("--force", action="store_true", help="Force re-scan even if indexed")
+    ap.add_argument(
+        "--update-manifest",
+        action="store_true",
+        help=(
+            "If drive is missing from manifest, attempt to update it by scanning mounted volumes"
+        ),
+    )
+    ap.add_argument(
+        "--prefix",
+        default="",
+        help="Optional label prefix when auto-updating the manifest",
+    )
+    ap.add_argument(
+        "--force",
+        action="store_true",
+        help="Force re-scan even if indexed",
+    )
     args = ap.parse_args()
 
     manifest_path = Path(args.manifest)
     start_time = datetime.now()
     if not manifest_path.exists():
         raise SystemExit(
-            f"Manifest not found: {manifest_path}. Copy drive_manifest.template.csv to drive_manifest.csv and fill your drive details."
+            "Manifest not found: "
+            f"{manifest_path}. Copy drive_manifest.template.csv to drive_manifest.csv and "
+            "fill your drive details."
         )
 
-    def load_entry() -> Optional[ManifestEntry]:
+    def load_entry() -> ManifestEntry | None:
         entries = load_manifest(manifest_path)
         return entries.get(args.drive)
 
     entry = load_entry()
     if not entry:
         if args.update_manifest:
-            print(f"Drive label '{args.drive}' not found in manifest. Attempting to update manifest...")
+            print(
+                f"Drive label '{args.drive}' not found in manifest. "
+                "Attempting to update manifest..."
+            )
             # Try to add current volumes to the manifest
-            run([
-                "python",
-                "scripts/make_manifest.py",
-                "--manifest",
-                str(manifest_path),
-                "--prefix",
-                args.prefix,
-            ])
+            run(
+                [
+                    "python",
+                    "scripts/make_manifest.py",
+                    "--manifest",
+                    str(manifest_path),
+                    "--prefix",
+                    args.prefix,
+                ]
+            )
             entry = load_entry()
         if not entry:
             raise SystemExit(
                 f"Drive label not found in manifest: {args.drive}.\n"
                 f"- Edit {manifest_path} to add it,\n"
-                f"- or run: python scripts/make_manifest.py --manifest {manifest_path} [--prefix PREFIX],\n"
+                f"- or run: python scripts/make_manifest.py --manifest {manifest_path} "
+                f"[--prefix PREFIX],\n"
                 f"- or re-run this command with --update-manifest."
             )
 
@@ -261,7 +309,8 @@ def main() -> None:
     # Run needed scans
     if not (need_files or need_photos or need_videos):
         print(
-            f"Drive '{args.drive}' already indexed in files/photos/videos. Skipping scans; recording drive snapshot."
+            f"Drive '{args.drive}' already indexed in files/photos/videos. "
+            f"Skipping scans; recording drive snapshot."
         )
         # Record/update drive metadata snapshot in DB even if no scans are needed
         con = duckdb.connect(args.db)
@@ -291,7 +340,11 @@ def main() -> None:
                     break
         con.execute("DELETE FROM drives WHERE drive_label = ?", [args.drive])
         con.execute(
-            "INSERT INTO drives(drive_label, mac_mount, volume_uuid, serial_number, notes, last_scanned) VALUES (?,?,?,?,?,?)",
+            (
+                "INSERT INTO drives("
+                "drive_label, mac_mount, volume_uuid, serial_number, notes, last_scanned"
+                ") VALUES (?,?,?,?,?,?)"
+            ),
             [args.drive, plat or entry.mac_mount, vol_uuid, serial, notes, datetime.now()],
         )
         # Also record a drive_scans history record with status 'skipped'
@@ -310,7 +363,7 @@ def main() -> None:
             con.close()
         print(f"Drive '{args.drive}' snapshot recorded.")
         return
-    files_csv: Optional[Path] = None
+    files_csv: Path | None = None
     if need_files:
         run(["./scripts/container_scan_files.sh", drive_path, args.drive, str(outdir_drive)])
         files_csv = latest_csv(outdir_drive, "files_")
@@ -318,31 +371,47 @@ def main() -> None:
         files_csv = latest_csv(outdir_drive, "files_")
 
     # If we have a files CSV, derive targeted lists for efficient media extraction
-    photo_list_path: Optional[Path] = None
-    video_list_path: Optional[Path] = None
+    photo_list_path: Path | None = None
+    video_list_path: Path | None = None
     if files_csv and (need_photos or need_videos):
         photo_list_path, video_list_path = derive_lists_from_files_csv(files_csv, outdir_drive)
 
     if need_photos:
         if photo_list_path and photo_list_path.exists():
-            run(["./scripts/container_extract_photos_from_list.sh", str(photo_list_path), args.drive, str(outdir_drive)])
+            run(
+                [
+                    "./scripts/container_extract_photos_from_list.sh",
+                    str(photo_list_path),
+                    args.drive,
+                    str(outdir_drive),
+                ]
+            )
         else:
             run(["./scripts/container_scan_photos.sh", drive_path, args.drive, str(outdir_drive)])
     if need_videos:
         if video_list_path and video_list_path.exists():
-            run(["./scripts/container_extract_videos_from_list.sh", str(video_list_path), args.drive, str(outdir_drive)])
+            run(
+                [
+                    "./scripts/container_extract_videos_from_list.sh",
+                    str(video_list_path),
+                    args.drive,
+                    str(outdir_drive),
+                ]
+            )
         else:
             run(["./scripts/container_scan_videos.sh", drive_path, args.drive, str(outdir_drive)])
 
     # Ingest
-    run([
-        "python",
-        "scripts/load_csvs.py",
-        "--db",
-        args.db,
-        "--dir",
-        str(outdir_drive),
-    ])
+    run(
+        [
+            "python",
+            "scripts/load_csvs.py",
+            "--db",
+            args.db,
+            "--dir",
+            str(outdir_drive),
+        ]
+    )
 
     # Record/update drive metadata snapshot in DB and write drive_scans history
     con = duckdb.connect(args.db)
@@ -376,7 +445,11 @@ def main() -> None:
     # Upsert by delete+insert to avoid ON CONFLICT dependency
     con.execute("DELETE FROM drives WHERE drive_label = ?", [args.drive])
     con.execute(
-        "INSERT INTO drives(drive_label, mac_mount, volume_uuid, serial_number, notes, last_scanned) VALUES (?,?,?,?,?,?)",
+        (
+            "INSERT INTO drives("
+            "drive_label, mac_mount, volume_uuid, serial_number, notes, last_scanned"
+            ") VALUES (?,?,?,?,?,?)"
+        ),
         [args.drive, plat or mac_mount, vol_uuid, serial, notes, datetime.now()],
     )
     # Determine latest CSVs used in this run

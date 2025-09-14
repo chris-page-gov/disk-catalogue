@@ -1,8 +1,9 @@
 from pathlib import Path
+
 from disk_catalogue import scan_path
 
 
-def test_scan_path_counts_tmp_files(tmp_path: Path):
+def test_scan_path_counts_tmp_files(tmp_path: Path) -> None:
     # Arrange
     (tmp_path / "a.txt").write_text("hello")
     sub = tmp_path / "sub"
@@ -19,7 +20,7 @@ def test_scan_path_counts_tmp_files(tmp_path: Path):
     assert len(records) == 2
 
 
-def test_scan_path_missing():
+def test_scan_path_missing() -> None:
     missing = Path("/unlikely/to/exist/___not_here___")
     try:
         list(scan_path(missing))

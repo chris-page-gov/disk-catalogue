@@ -10,11 +10,13 @@ Behavior:
   - If schemas drift, adds missing columns and aligns on insert.
   - Skips files already recorded in an ingestion log table.
 """
+
 from __future__ import annotations
 
 import argparse
-import duckdb
 from pathlib import Path
+
+import duckdb
 
 PHOTO_PREFIX = "photos_"
 VIDEO_PREFIX = "videos_"
@@ -78,8 +80,12 @@ def qident(name: str) -> str:
 
 
 def ingest_file(con: duckdb.DuckDBPyConnection, path: Path, table: str) -> None:
-    # Read CSV with auto-detected schema into a relation, create staging view
-    rel = con.read_csv(str(path), header=True, auto_detect=True)
+    # Read CSV (auto-detected) with explicit quoting to handle commas in paths
+    rel = con.from_csv_auto(
+        str(path),
+        header=True,
+        quotechar='"',
+    )
     rel.create_view("_staging_ingest", replace=True)
 
     try:
@@ -91,7 +97,7 @@ def ingest_file(con: duckdb.DuckDBPyConnection, path: Path, table: str) -> None:
             tgt_cols = get_table_columns(con, table)
             stg_cols = get_view_columns(con, "_staging_ingest")
             tgt_names = [n for n, _ in tgt_cols]
-            stg_dict = {n: t for n, t in stg_cols}
+            stg_dict = dict(stg_cols)
 
             # Add any missing columns from staging to target (using staging type)
             for name, typ in stg_cols:
@@ -131,7 +137,7 @@ def ingest_file(con: duckdb.DuckDBPyConnection, path: Path, table: str) -> None:
 def ensure_derived_views(con: duckdb.DuckDBPyConnection) -> None:
     # Create convenient views with derived identifiers and drive/path parsing
     con.execute(
-        r'''
+        r"""
         CREATE OR REPLACE VIEW files AS
         SELECT
           *,
@@ -145,10 +151,10 @@ def ensure_derived_views(con: duckdb.DuckDBPyConnection) -> None:
             CAST("FileSize#" AS BIGINT)
           ) AS FileKey
         FROM files_raw;
-        '''
+        """
     )
     con.execute(
-        r'''
+        r"""
         CREATE OR REPLACE VIEW photos AS
         SELECT
           *,
@@ -162,10 +168,10 @@ def ensure_derived_views(con: duckdb.DuckDBPyConnection) -> None:
             CAST("FileSize#" AS BIGINT)
           ) AS FileKey
         FROM photos_raw;
-        '''
+        """
     )
     con.execute(
-        r'''
+        r"""
         CREATE OR REPLACE VIEW videos AS
         SELECT
           *,
@@ -179,7 +185,7 @@ def ensure_derived_views(con: duckdb.DuckDBPyConnection) -> None:
             CAST("FileSize#" AS BIGINT)
           ) AS FileKey
         FROM videos_raw;
-        '''
+        """
     )
 
 

@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable, Iterator
+
 
 @dataclass(frozen=True)
 class FileRecord:
@@ -11,7 +12,7 @@ class FileRecord:
 
 
 def iter_files(root: Path) -> Iterator[Path]:
-    for p in root.rglob('*'):
+    for p in root.rglob("*"):
         if p.is_file():
             yield p
 

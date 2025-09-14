@@ -15,20 +15,20 @@ Behavior:
 
 Note: The manifest is gitignored; commit `drive_manifest.template.csv` only.
 """
+
 from __future__ import annotations
 
 import argparse
 import csv
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Iterable
-
 
 HEADER = ["drive_label", "platform_mount", "volume_uuid", "serial_number", "notes"]
 
 
-def list_host_volumes(root: Path = Path("/host/Volumes")) -> Iterable[str]:
+def list_host_volumes(root: Path = Path("/host/Volumes")) -> Iterator[str]:
     if not root.exists():
-        return []
+        return
     for entry in sorted(root.iterdir()):
         try:
             if entry.is_dir():
@@ -42,7 +42,7 @@ def read_existing_labels(manifest: Path) -> set[str]:
         return set()
     with manifest.open(newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        return { (row.get("drive_label") or "").strip() for row in reader }
+        return {(row.get("drive_label") or "").strip() for row in reader}
 
 
 def ensure_header(manifest: Path) -> None:
@@ -91,4 +91,3 @@ def main() -> None:
 
 if __name__ == "__main__":  # pragma: no cover
     main()
-

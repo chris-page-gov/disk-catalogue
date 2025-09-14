@@ -43,6 +43,20 @@ Make executable:
 chmod +x .git/hooks/pre-commit
 ```
 
+## Local Linting & Type Checks
+
+Use the helper script to run Ruff, Black, and mypy together:
+
+```bash
+scripts/lint.sh
+```
+
+To automatically fix import ordering and formatting, use:
+
+```bash
+scripts/lint.sh --fix
+```
+
 ## Continuous Integration (CI)
 
 This repository runs lint, type checks, and tests on every push and pull request.

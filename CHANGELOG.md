@@ -6,15 +6,24 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+- (no changes yet)
+
+## [0.1.4] - 2025-09-14
+
 ### Added
 
 - Docs: README note about virtualization/Spotlight holding files after scans and mitigation steps.
 - Host-run support: `scan_and_ingest.py` auto-detects environment and avoids remapping `/Volumes` when not in the dev container.
+- Dev tooling: `scripts/lint.sh --fix` adds auto-fix mode (ruff --fix, ruff format, black).
 
 ### Changed
 
 - Git ignore: ignore entire `output/` directory (all generated files, e.g. lists), not just CSV/Parquet.
 - Git ignore: ignore `drive_manifest.csv`, `drives_manifest.csv`, and other `drive_manifest*.csv` variants (keep `drive_manifest.template.csv` tracked).
+
+### Fixed
+
+- Ingestion: force DuckDB CSV quoting and dialect to correctly parse paths with commas (e.g., directories like `Locations, Angles`) and avoid type-conversion errors on `FileSize#`.
 
 ## [0.1.3] - 2025-09-13
 

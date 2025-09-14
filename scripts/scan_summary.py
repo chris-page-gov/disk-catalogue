@@ -3,10 +3,6 @@ from __future__ import annotations
 
 import argparse
 import os
-from typing import List, Tuple
-
-import duckdb
-
 
 QUERY = """
 WITH ranked AS (
@@ -21,7 +17,11 @@ SELECT drive_label,
        (epoch(ended_at) - epoch(started_at)) AS duration_s,
        files_rows + photos_rows + videos_rows AS total_rows,
        CASE WHEN (epoch(ended_at) - epoch(started_at)) > 0
-            THEN ROUND((files_rows + photos_rows + videos_rows) * 1.0 / (epoch(ended_at) - epoch(started_at)), 2)
+            THEN ROUND(
+                (files_rows + photos_rows + videos_rows) * 1.0
+                / (epoch(ended_at) - epoch(started_at)),
+                2
+            )
             ELSE NULL END AS rows_per_sec
 FROM ranked
 WHERE rn = 1
@@ -29,11 +29,14 @@ ORDER BY drive_label;
 """
 
 
-def fmt_table(headers: List[str], rows: List[Tuple]) -> str:
-    cols = list(zip(*([headers] + [["" if v is None else str(v) for v in r] for r in rows])))
+def fmt_table(headers: list[str], rows: list[tuple[object, ...]]) -> str:
+    cols = list(
+        zip(*([headers] + [["" if v is None else str(v) for v in r] for r in rows]), strict=False)
+    )
     widths = [max(len(cell) for cell in col) for col in cols]
-    def join_row(values: List[str]) -> str:
-        return " | ".join(val.ljust(w) for val, w in zip(values, widths))
+
+    def join_row(values: list[str]) -> str:
+        return " | ".join(val.ljust(w) for val, w in zip(values, widths, strict=False))
 
     lines = [join_row(headers), "-+-".join("-" * w for w in widths)]
     for r in rows:
@@ -50,12 +53,20 @@ def main() -> None:
     if not os.path.exists(args.db):
         raise SystemExit(f"Database not found: {args.db}")
 
+    # Lazy import to keep third-party deps out of the top-level import block for isort
+    import duckdb
+
     con = duckdb.connect(args.db)
     # Ensure table exists
     try:
-        con.sql("SELECT 1 FROM information_schema.tables WHERE table_schema='main' AND table_name='drive_scans'")
-    except Exception:
-        raise SystemExit("drive_scans table not found. Run a scan via scripts/scan_and_ingest.py first.")
+        con.sql(
+            "SELECT 1 FROM information_schema.tables "
+            "WHERE table_schema='main' AND table_name='drive_scans'"
+        )
+    except Exception as err:
+        raise SystemExit(
+            "drive_scans table not found. Run a scan via scripts/scan_and_ingest.py first."
+        ) from err
 
     res = con.sql(QUERY).fetchall()
     headers = [
@@ -71,7 +82,9 @@ def main() -> None:
         "rows_per_sec",
     ]
     if args.csv:
-        import csv, sys
+        import csv
+        import sys
+
         w = csv.writer(sys.stdout)
         w.writerow(headers)
         for r in res:

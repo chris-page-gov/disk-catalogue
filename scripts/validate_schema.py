@@ -4,7 +4,6 @@ from __future__ import annotations
 import argparse
 import os
 from dataclasses import dataclass
-from typing import Iterable
 
 import duckdb
 
@@ -110,13 +109,14 @@ def main() -> None:
     problems: list[str] = []
 
     print(f"Database: {db_path}")
-    print(f"Size: {db_size_bytes/1024/1024:.2f} MiB ({db_size_bytes} bytes)")
+    print(f"Size: {db_size_bytes / 1024 / 1024:.2f} MiB ({db_size_bytes} bytes)")
     print("")
 
     # Row counts (quick sanity)
     for tbl in ("files_raw", "photos_raw", "videos_raw"):
         if (tbl, "base table") in rels or (tbl, "table") in rels:
-            n = con.sql(f"SELECT COUNT(*) FROM {tbl}").fetchone()[0]
+            row = con.sql(f"SELECT COUNT(*) FROM {tbl}").fetchone()
+            n = int(row[0]) if row is not None else 0
             print(f"Rows in {tbl}: {n}")
     print("")
 
@@ -132,9 +132,7 @@ def main() -> None:
             cols = get_columns(con, req.name, req.kind)
             missing = [c for c in req.required_columns if c not in cols]
             if missing:
-                problems.append(
-                    f"{req.kind} {req.name} missing columns: {', '.join(missing)}"
-                )
+                problems.append(f"{req.kind} {req.name} missing columns: {', '.join(missing)}")
 
     if problems:
         print("Schema validation: FAIL")
