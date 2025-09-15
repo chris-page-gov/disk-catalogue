@@ -10,6 +10,7 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 - Helper: `scripts/run_sql.sh` to run DuckDB CLI inside the Dev Container (with host fallback).
 - Docs: README examples now use `scripts/run_sql.sh`; added a "Run SQL" section.
+- Tests: add `tests/test_sample_queries.py` to execute the "Top cameras and lenses" query from `sample_queries.sql` against the local DuckDB (skips gracefully if unavailable).
 
 ## [0.1.5] - 2025-09-14
 
