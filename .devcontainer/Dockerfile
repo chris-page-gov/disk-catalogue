@@ -20,20 +20,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Symlink fd (fd-find installs 'fdfind')
 RUN if [ ! -e /usr/local/bin/fd ]; then ln -s /usr/bin/fdfind /usr/local/bin/fd; fi
 
-# Install uv (fast Python package/dependency manager)
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    mv /root/.local/bin/uv /usr/local/bin/uv && \
-    rm -rf /root/.local
+## Install uv via PyPI (avoids curl TLS issues in some host setups)
+# Upstream provides prebuilt wheels; this is simpler and more reliable cross-platform.
+# If a native build is ever required, ensure build-essential and rust toolchain are present.
+RUN pip install --no-cache-dir uv
 
 # Install baseline dev tooling with pip during image build
 RUN pip install --no-cache-dir \
-    pytest pytest-cov \
-    mypy \
-    ruff \
-    black \
-    build \
-    duckdb \
-    pandas
+  pytest pytest-cov \
+  mypy \
+  ruff \
+  black \
+  build \
+  duckdb \
+  pandas
 
 # Create scripts directory placeholder (so postCreateCommand doesn't fail)
 RUN mkdir -p /workspaces/disk-catalogue/scripts
