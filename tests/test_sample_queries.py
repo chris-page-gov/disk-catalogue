@@ -39,6 +39,14 @@ def test_top_cameras_and_lenses() -> None:
     if not exists:
         pytest.skip("photos view not found; run ingestion first")
 
+    # If Model/LensModel columns are not present (older scans with minimal columns), skip.
+    cols = con.execute(
+        "SELECT column_name FROM information_schema.columns WHERE table_name = 'photos'"
+    ).fetchall()
+    colset = {c[0] for c in cols}
+    if not {"Model", "LensModel"}.issubset(colset):
+        pytest.skip("photos view lacks Model/LensModel; rescan photos to include EXIF tags")
+
     sql = (
         "SELECT Model, LensModel, COUNT(*) AS n "
         "FROM photos GROUP BY 1,2 ORDER BY n DESC LIMIT 25;"
@@ -54,4 +62,3 @@ def test_top_cameras_and_lenses() -> None:
         # Counts should be non-increasing
         counts = [int(r[2]) for r in rows]
         assert counts == sorted(counts, reverse=True)
-
