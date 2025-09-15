@@ -6,7 +6,10 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
-_No changes yet._
+### Added
+
+- Helper: `scripts/run_sql.sh` to run DuckDB CLI inside the Dev Container (with host fallback).
+- Docs: README examples now use `scripts/run_sql.sh`; added a "Run SQL" section.
 
 ## [0.1.5] - 2025-09-14
 

@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](pyproject.toml)
 
-Version: 0.1.4
+Version: 0.1.5
 
 
 Early-stage toolkit for scanning mounted volumes and exploring metadata (paths, sizes) via DuckDB.
@@ -64,22 +64,22 @@ python scripts/scan_and_ingest.py --drive Ext-10 --update-manifest
 - Example:
 
 ```bash
-duckdb catalogue.duckdb -c "select Drive, RelativePath, FileExt, \"FileSize#\" from files limit 10;"
+scripts/run_sql.sh catalogue.duckdb -c "select Drive, RelativePath, FileExt, \"FileSize#\" from files limit 10;"
 ```
 
 ## Duplicates 101
 
 - By size only (broad candidates):
 ```bash
-duckdb catalogue.duckdb -c "select \"FileSize#\" bytes, count(*) n, count(distinct Drive) drives from files group by 1 having n>1 order by n desc, bytes desc limit 50;"
+scripts/run_sql.sh catalogue.duckdb -c "select \"FileSize#\" bytes, count(*) n, count(distinct Drive) drives from files group by 1 having n>1 order by n desc, bytes desc limit 50;"
 ```
 - By name + size (stronger):
 ```bash
-duckdb catalogue.duckdb -c "select lower(FileName) name, \"FileSize#\" bytes, count(*) n, list(distinct Drive) drives from files group by 1,2 having n>1 order by n desc, bytes desc limit 50;"
+scripts/run_sql.sh catalogue.duckdb -c "select lower(FileName) name, \"FileSize#\" bytes, count(*) n, list(distinct Drive) drives from files group by 1,2 having n>1 order by n desc, bytes desc limit 50;"
 ```
 - Pairs across drives (same name + size):
 ```bash
-duckdb catalogue.duckdb -c "select a.Drive a_drive, b.Drive b_drive, a.RelativePath a_path, b.RelativePath b_path, a.\"FileSize#\" bytes from files a join files b on a.\"FileSize#\"=b.\"FileSize#\" and lower(a.FileName)=lower(b.FileName) and a.Drive<b.Drive limit 50;"
+scripts/run_sql.sh catalogue.duckdb -c "select a.Drive a_drive, b.Drive b_drive, a.RelativePath a_path, b.RelativePath b_path, a.\"FileSize#\" bytes from files a join files b on a.\"FileSize#\"=b.\"FileSize#\" and lower(a.FileName)=lower(b.FileName) and a.Drive<b.Drive limit 50;"
 ```
 - Exact match later: add a `file_checksums` table with content hashes (MD5/SHA256) keyed by (Drive, RelativePath, FileSize#), then group by checksum to confirm duplicates precisely.
 
@@ -88,8 +88,17 @@ duckdb catalogue.duckdb -c "select a.Drive a_drive, b.Drive b_drive, a.RelativeP
 - Last scan per drive (status + counts): see `sample_queries.sql` section “Scan summaries”.
 - Quick run:
 ```bash
-duckdb catalogue.duckdb -c "WITH r AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY drive_label ORDER BY started_at DESC) rn FROM drive_scans) SELECT drive_label, started_at, ended_at, status, files_rows, photos_rows, videos_rows, (epoch(ended_at) - epoch(started_at)) AS duration_s FROM r WHERE rn=1 ORDER BY drive_label;"
+scripts/run_sql.sh catalogue.duckdb -c "WITH r AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY drive_label ORDER BY started_at DESC) rn FROM drive_scans) SELECT drive_label, started_at, ended_at, status, files_rows, photos_rows, videos_rows, (epoch(ended_at) - epoch(started_at)) AS duration_s FROM r WHERE rn=1 ORDER BY drive_label;"
 ```
+@@
+## Run SQL (container‑friendly)
+
+- Use the helper to run the DuckDB CLI inside the Dev Container (or on host if already inside):
+  - Interactive: `scripts/run_sql.sh catalogue.duckdb`
+  - One‑liner: `scripts/run_sql.sh catalogue.duckdb -c 'SELECT 1;'`
+- Works with `sample_queries.sql`. Example — Top cameras and lenses:
+  - `scripts/run_sql.sh catalogue.duckdb -c "SELECT Model, LensModel, COUNT(*) AS n FROM photos GROUP BY 1,2 ORDER BY n DESC LIMIT 25;"`
+- If run on host without the Dev Containers CLI installed, it warns and falls back to host `duckdb` if available; otherwise it prints setup instructions.
 - Or via a friendly CLI table:
 ```bash
 python scripts/scan_summary.py --db catalogue.duckdb
