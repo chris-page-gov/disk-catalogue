@@ -1,0 +1,168 @@
+{
+  "description": "Gold questions for evaluating Following Jesus semantic audio cataloguing.",
+  "rubric_notes": [
+    "Scores are field-level checks against catalogue entries looked up by file_key.",
+    "Use the same questions for future model or prompt changes to compare regression/improvement.",
+    "The sample set is deliberately small and should be expanded after more human review."
+  ],
+  "questions": [
+    {
+      "question_id": "module_2_avery_welcome",
+      "prompt": "Identify the role and speaker of Avery's Welcome.",
+      "lookup": {
+        "file_key": "4486700515623216981"
+      },
+      "expected": {
+        "semantic_title": "Avery's Welcome",
+        "track_type": "module_overview",
+        "speaker_names": [
+          "Avery Willis"
+        ],
+        "module_role": "module_orientation"
+      },
+      "rubric": {
+        "semantic_title": 0.25,
+        "track_type": 0.25,
+        "speaker_names": 0.25,
+        "module_role": 0.25
+      }
+    },
+    {
+      "question_id": "genesis_3_story",
+      "prompt": "Identify the Bible passage and role of the Adam and Eve story.",
+      "lookup": {
+        "file_key": "13707528653334717660"
+      },
+      "expected": {
+        "bible_reference": "Genesis 3",
+        "bible_book": "Genesis",
+        "track_type": "bible_story",
+        "semantic_title": "Adam and Eve: disobedience, shame, judgment, and exile"
+      },
+      "rubric": {
+        "bible_reference": 0.4,
+        "bible_book": 0.2,
+        "track_type": 0.2,
+        "semantic_title": 0.2
+      }
+    },
+    {
+      "question_id": "john_21_peter_story",
+      "prompt": "Identify the restored Peter story.",
+      "lookup": {
+        "file_key": "151771668100448811"
+      },
+      "expected": {
+        "bible_reference": "John 21:1-22",
+        "bible_book": "John",
+        "track_type": "bible_story",
+        "semantic_title": "Jesus restores Peter: feed my sheep and follow me"
+      },
+      "rubric": {
+        "bible_reference": 0.4,
+        "bible_book": 0.2,
+        "track_type": 0.2,
+        "semantic_title": 0.2
+      }
+    },
+    {
+      "question_id": "story_dialogue_questions",
+      "prompt": "Identify the facilitator-training track on story dialogue questions.",
+      "lookup": {
+        "file_key": "12191936820286038903"
+      },
+      "expected": {
+        "track_type": "training_guidance",
+        "semantic_title": "How to ask story dialogue questions",
+        "module_role": "facilitator_training",
+        "worldview_issue": "worldview discussion"
+      },
+      "rubric": {
+        "track_type": 0.3,
+        "semantic_title": 0.3,
+        "module_role": 0.2,
+        "worldview_issue": 0.2
+      }
+    },
+    {
+      "question_id": "exodus_40_tabernacle",
+      "prompt": "Identify the tabernacle story.",
+      "lookup": {
+        "file_key": "12993654722786473959"
+      },
+      "expected": {
+        "bible_reference": "Exodus 40",
+        "bible_book": "Exodus",
+        "track_type": "bible_story",
+        "semantic_title": "Moses sets up the tabernacle and God's glory fills it"
+      },
+      "rubric": {
+        "bible_reference": 0.4,
+        "bible_book": 0.2,
+        "track_type": 0.2,
+        "semantic_title": 0.2
+      }
+    },
+    {
+      "question_id": "john_lazarus_grain_wheat",
+      "prompt": "Identify the Lazarus and grain of wheat story.",
+      "lookup": {
+        "file_key": "17123888136745437075"
+      },
+      "expected": {
+        "bible_reference": "John 11:1-12:26",
+        "bible_book": "John",
+        "track_type": "bible_story",
+        "semantic_title": "Lazarus, Mary's anointing, triumphal entry, and the grain of wheat"
+      },
+      "rubric": {
+        "bible_reference": 0.4,
+        "bible_book": 0.2,
+        "track_type": 0.2,
+        "semantic_title": 0.2
+      }
+    },
+    {
+      "question_id": "mission_with_god_overview",
+      "prompt": "Identify the Our Mission With God module overview.",
+      "lookup": {
+        "file_key": "14697633427727030273"
+      },
+      "expected": {
+        "track_type": "module_overview",
+        "semantic_title": "Mission with God: God's big story and spiritual markers",
+        "module_role": "module_orientation",
+        "bible_reference": "Genesis 28"
+      },
+      "rubric": {
+        "track_type": 0.25,
+        "semantic_title": 0.35,
+        "module_role": 0.2,
+        "bible_reference": 0.2
+      }
+    },
+    {
+      "question_id": "wake_up_to_orality",
+      "prompt": "Identify the roundtable training on orality and literacy.",
+      "lookup": {
+        "file_key": "16269683863957222810"
+      },
+      "expected": {
+        "track_type": "roundtable_training",
+        "semantic_title": "Wake Up to Orality and Literacy: why literate methods fail oral learners",
+        "speaker_names": [
+          "Avery Willis",
+          "Jim Slack",
+          "Grant Lovejoy"
+        ],
+        "module_role": "foundational_training"
+      },
+      "rubric": {
+        "track_type": 0.25,
+        "semantic_title": 0.25,
+        "speaker_names": 0.25,
+        "module_role": 0.25
+      }
+    }
+  ]
+}

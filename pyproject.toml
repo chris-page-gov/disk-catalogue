@@ -28,7 +28,7 @@ select = ["E", "F", "W", "I", "B", "C4", "UP", "RUF"]
 line-length = 100
 
 [tool.pytest.ini_options]
-addopts = "-ra -q --cov=disk_catalogue --cov-report=term-missing"
+addopts = "-ra -q --cov=disk_catalogue --cov-report=term-missing --cov-fail-under=95"
 pythonpath = ["src"]
 
 [tool.mypy]

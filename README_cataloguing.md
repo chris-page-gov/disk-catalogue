@@ -182,3 +182,109 @@ duckdb catalogue.duckdb -c "select a.Drive a_drive, b.Drive b_drive, a.RelativeP
 
 For exact duplicate verification, add a `file_checksums` table with content hashes (MD5/SHA256)
 keyed by (Drive, RelativePath, FileSize#) and group by checksum.
+
+---
+
+## Following Jesus Semantic Audio Catalogue
+
+For the Following Jesus audio recovery set, the semantic catalogue script transcribes copied M4A
+files, derives searchable teaching metadata, exports CSV/JSON sidecars, and replaces DuckDB tables:
+
+```bash
+python scripts/catalogue_following_jesus_semantic.py
+```
+
+Default inputs:
+
+- `output/recovery_plans/following_jesus_team_ext10/audio_metadata.csv` — recovered audio
+  metadata, including `file_key`, album/track fields, and `destination_path`.
+- `output/models/ggml-base.en.bin` — whisper.cpp model used by `whisper-cli`.
+- The copied source files listed in `destination_path`.
+- `eval/following_jesus_gold_questions.json` — optional evaluation questions.
+
+The workflow expects `ffmpeg` and `whisper-cli` to be available. Override defaults when needed:
+
+```bash
+python scripts/catalogue_following_jesus_semantic.py \
+  --metadata-csv output/recovery_plans/following_jesus_team_ext10/audio_metadata.csv \
+  --output-dir output/recovery_plans/following_jesus_team_ext10/semantic_catalogue \
+  --db catalogue.duckdb \
+  --model output/models/ggml-base.en.bin \
+  --threads 8
+```
+
+### Outputs
+
+Files are written below
+`output/recovery_plans/following_jesus_team_ext10/semantic_catalogue/`:
+
+- `transcripts/<album>/d<disc>_t<track>_<file_key>_<name>.txt` — transcript text.
+- `transcripts/<album>/d<disc>_t<track>_<file_key>_<name>.srt` — subtitle timing output
+  when whisper emits it.
+- `transcripts/<album>/d<disc>_t<track>_<file_key>_<name>.semantic.json` — per-file
+  semantic sidecar.
+- `semantic_catalogue_state.json` — resumability state, source fingerprints, status, errors,
+  and latest semantic hints.
+- `semantic_catalogue.csv` — full exported semantic catalogue.
+- `semantic_catalogue_status.csv` — exported state rows.
+- `semantic_catalogue_verification.json` — completeness check.
+- `semantic_catalogue_evaluation.csv` — optional gold-question scoring output.
+
+### Resumability and status
+
+The script records source file size and mtime for each completed file. A later run skips completed
+unchanged files, retries failed files by default, and continues after individual failures. Use
+`--no-retry-failed` to leave failed rows alone, `--retry-failed` to make the default explicit, or
+`--force` to rebuild even completed rows.
+
+Status and checkpoint commands:
+
+```bash
+python scripts/catalogue_following_jesus_semantic.py --status
+python scripts/catalogue_following_jesus_semantic.py --limit 10
+python scripts/catalogue_following_jesus_semantic.py --checkpoint-interval 10
+```
+
+`--status` prints JSON with total, completed, failed, running, remaining, last file, and updated
+timestamp. During normal processing the state file is updated after each file and the CSV/DuckDB
+exports are refreshed every `--checkpoint-interval` completed files, then again at the end.
+
+### Verification and evaluation
+
+Verification rebuilds exports and checks that every expected metadata row has a catalogue sidecar
+and non-empty transcript:
+
+```bash
+python scripts/catalogue_following_jesus_semantic.py --verify
+```
+
+Evaluation also loads gold questions when the JSON exists and writes per-question scores:
+
+```bash
+python scripts/catalogue_following_jesus_semantic.py --evaluate
+```
+
+The gold-question file is optional. If it is missing, the catalogue and verification exports still
+refresh and the evaluation table is empty.
+
+### DuckDB tables
+
+Each export replaces these tables in `catalogue.duckdb`:
+
+- `audio_semantic_catalogue` — one row per semantic sidecar. Key columns include
+  `recovery_set`, `file_key`, `album_folder`, `file_name`, `embedded_title`,
+  `semantic_title`, `track_type`, `bible_reference`, `bible_book`, `speaker_names`,
+  `speaker_confidence`, `storying_role`, `module_role`, `process_step`, `memory_verse`,
+  `worldview_issue`, `summary_short`, `summary_long`, `keywords`, `transcript_path`,
+  `srt_path`, `transcript_chars`, `metadata_confidence`, `evidence_json`, `created_at`,
+  and `analysis_backend`.
+- `audio_semantic_catalogue_status` — one row per state record with `file_key`, `status`,
+  source fingerprint fields, start/end/failure timestamps, transcript and sidecar paths,
+  elapsed time, error, and latest semantic hints.
+- `audio_semantic_catalogue_verification` — one-row verification summary with expected counts
+  and JSON/list columns for missing or empty outputs.
+- `audio_semantic_catalogue_eval` — optional evaluation rows: `question_id`, `score`,
+  `max_score`, `passed`, and `details_json`.
+
+See `sample_queries.sql` for ready-to-run queries covering progress, failures, completeness,
+low-confidence rows, Bible references, speakers, keywords, and evaluation results.

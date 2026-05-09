@@ -90,7 +90,57 @@ scripts/run_sql.sh catalogue.duckdb -c "select a.Drive a_drive, b.Drive b_drive,
 ```bash
 scripts/run_sql.sh catalogue.duckdb -c "WITH r AS (SELECT *, ROW_NUMBER() OVER (PARTITION BY drive_label ORDER BY started_at DESC) rn FROM drive_scans) SELECT drive_label, started_at, ended_at, status, files_rows, photos_rows, videos_rows, (epoch(ended_at) - epoch(started_at)) AS duration_s FROM r WHERE rn=1 ORDER BY drive_label;"
 ```
-@@
+
+## Following Jesus Semantic Audio Catalogue
+
+The recovery workflow for the Following Jesus audio set is handled by:
+
+```bash
+python scripts/catalogue_following_jesus_semantic.py
+```
+
+Default inputs:
+
+- `output/recovery_plans/following_jesus_team_ext10/audio_metadata.csv`
+- `output/models/ggml-base.en.bin`
+- copied M4A files referenced by `destination_path` in the metadata CSV
+- optional gold questions at `eval/following_jesus_gold_questions.json`
+
+Default outputs go under `output/recovery_plans/following_jesus_team_ext10/semantic_catalogue/`:
+
+- `transcripts/<album>/...txt`, `.srt`, and per-file `.semantic.json` sidecars.
+- `semantic_catalogue_state.json` for resumability and status.
+- `semantic_catalogue.csv`, `semantic_catalogue_status.csv`,
+  `semantic_catalogue_verification.json`, and optional
+  `semantic_catalogue_evaluation.csv`.
+
+The script is resumable. It skips completed files when the source size and mtime are unchanged,
+writes status after each file, checkpoints exports every `--checkpoint-interval` files, and
+continues after individual file failures. Use:
+
+```bash
+python scripts/catalogue_following_jesus_semantic.py --status
+python scripts/catalogue_following_jesus_semantic.py --verify
+python scripts/catalogue_following_jesus_semantic.py --evaluate
+python scripts/catalogue_following_jesus_semantic.py --retry-failed
+python scripts/catalogue_following_jesus_semantic.py --force
+```
+
+DuckDB tables written to `catalogue.duckdb`:
+
+- `audio_semantic_catalogue`: one row per catalogued track with semantic title, type,
+  Bible reference/book, speakers, storying role, summaries, keywords, transcript paths,
+  confidence, evidence JSON, and analysis backend.
+- `audio_semantic_catalogue_status`: per-file processing state, source fingerprint,
+  transcript/sidecar paths, elapsed time, failures, and latest inferred metadata.
+- `audio_semantic_catalogue_verification`: one-row completeness check covering expected files,
+  catalogued files, transcript files, missing catalogue rows, missing transcripts, and empty
+  transcripts.
+- `audio_semantic_catalogue_eval`: optional gold-question scores with pass/fail and details JSON.
+
+See `sample_queries.sql` for semantic catalogue status, verification, evaluation, and search
+examples.
+
 ## Run SQL (container‑friendly)
 
 - Use the helper to run the DuckDB CLI inside the Dev Container (or on host if already inside):
