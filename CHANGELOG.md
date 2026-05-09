@@ -6,6 +6,10 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+### Fixed
+
+- CI: run mypy with the repository configuration so it matches `scripts/lint.sh`.
+
 ## [1.0.0] - 2026-05-09
 
 ### Added
