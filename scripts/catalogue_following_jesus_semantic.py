@@ -158,26 +158,27 @@ def convert_to_wav(source: Path, wav_path: Path) -> None:
 
 def run_whisper(wav_path: Path, output_stem: Path, model_path: Path, threads: int) -> None:
     output_stem.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(
-        [
-            "whisper-cli",
-            "-m",
-            str(model_path),
-            "-f",
-            str(wav_path),
-            "-l",
-            "en",
-            "-t",
-            str(threads),
-            "-otxt",
-            "-osrt",
-            "-oj",
-            "-of",
-            str(output_stem),
-            "-np",
-        ],
-        check=True,
-    )
+    command = [
+        "whisper-cli",
+        "-m",
+        str(model_path),
+        "-f",
+        str(wav_path),
+        "-l",
+        "en",
+        "-t",
+        str(threads),
+        "-otxt",
+        "-osrt",
+        "-oj",
+        "-of",
+        str(output_stem),
+        "-np",
+    ]
+    result = subprocess.run(command, capture_output=True, text=True, check=False)
+    if result.returncode:
+        details = "\n".join(part for part in [result.stdout, result.stderr] if part)
+        raise RuntimeError(f"whisper-cli failed for {wav_path}: {details[-4000:]}")
 
 
 def transcribe_record(
