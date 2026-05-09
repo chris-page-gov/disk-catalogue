@@ -167,6 +167,14 @@ FROM audio_semantic_source_metadata
 ORDER BY album_folder, disc_index, track_index
 LIMIT 25;
 
+-- Following Jesus rename plan module counts and sample target paths
+SELECT module_code,
+       COUNT(*) AS tracks,
+       MIN(target_relative_path) AS first_target
+FROM audio_semantic_rename_plan
+GROUP BY 1
+ORDER BY 1;
+
 -- Semantic catalogue rows with low confidence or missing Bible references
 SELECT album_folder,
        file_name,

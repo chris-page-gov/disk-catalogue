@@ -21,6 +21,10 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
   `semantic_catalogue_source_metadata.csv` and `audio_semantic_source_metadata`.
 - Verification: allow a 20-second non-speech tail when comparing SRT end times with audio
   duration, so normal outro music or silence does not fail completeness checks.
+- Rename tooling: add a Following Jesus rename planner, dry-run/apply script, validation script,
+  and CSV/Markdown catalogues for a compact human-readable file layout on `ExtSSD-Data`.
+- Rename tooling: persist generated rename plans to `audio_semantic_rename_plan` in DuckDB for
+  querying alongside the semantic catalogue.
 
 ### Changed
 

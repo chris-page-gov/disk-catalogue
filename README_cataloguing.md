@@ -300,3 +300,66 @@ Each export replaces these tables in `catalogue.duckdb`:
 
 See `sample_queries.sql` for ready-to-run queries covering progress, failures, completeness,
 low-confidence rows, Bible references, speakers, keywords, and evaluation results.
+
+## Following Jesus File Rename Workflow
+
+The rename workflow uses `audio_semantic_catalogue` and `audio_semantic_source_metadata` as the
+source of truth. It creates a compact, human-readable filesystem while keeping the richer catalogue
+data in CSV/Markdown and DuckDB.
+
+### Naming scheme
+
+- Module folders: `FJ-M01 Primary Oral Learners`, `FJ-M02 Choosing to Follow`, ...
+- Disc folders: `Disc 01`, `Disc 02`, ...
+- File names: `FJ-M03-D02-T09 - Jesus Calls the First Disciples.m4a`.
+
+Titles prefer non-generic embedded titles from the source metadata. When the embedded title is only
+`Track NN`, the plan uses the semantic title inferred from the transcript. File names are shortened
+and made filesystem-safe; the full title, summary, Bible reference, original path, and target path
+remain in the catalogue outputs.
+
+The module mapping intentionally corrects the recovered folder split where
+`Following Jesus 2--Living in the Family` contains disc 1 of Module 3:
+
+- `FJ-M01 Primary Oral Learners`
+- `FJ-M02 Choosing to Follow`
+- `FJ-M03 Living in the Family`
+- `FJ-M04 Becoming Like Jesus`
+- `FJ-M05 Serving Like Jesus`
+- `FJ-M06 Multiplying Disciples`
+- `FJ-M07 Mission With God`
+
+### Generate and validate the plan
+
+```bash
+python scripts/plan_following_jesus_rename.py
+python scripts/validate_following_jesus_rename.py --mode before
+python scripts/rename_following_jesus_files.py
+```
+
+Default outputs go under
+`output/recovery_plans/following_jesus_team_ext10/rename_fileset/`:
+
+- `following_jesus_rename_plan.csv` — one source-to-target move per file.
+- `following_jesus_album_catalogue.csv` — module/disc summary.
+- `following_jesus_track_catalogue.csv` — readable track catalogue with metadata.
+- `following_jesus_catalogue.md` — browseable Markdown catalogue.
+- `following_jesus_rename_validation.json` — latest validation report.
+
+The planner also replaces `audio_semantic_rename_plan` in `catalogue.duckdb` unless
+`--no-db-table` is supplied.
+
+The target root defaults to
+`/Volumes/ExtSSD-Data/Avery Willis Storying Audio/Following Jesus - Renamed`. Override it with
+`--target-root`.
+
+`scripts/rename_following_jesus_files.py` is dry-run by default and performs preflight checks for
+missing sources, duplicate targets, existing targets, and size mismatches. To actually move files:
+
+```bash
+python scripts/rename_following_jesus_files.py --apply
+python scripts/validate_following_jesus_rename.py --mode after
+```
+
+If you want hash validation, generate the plan with `--hash` before applying and validate with
+`--verify-hash`. That reads every M4A once to store SHA-256 values in the plan.

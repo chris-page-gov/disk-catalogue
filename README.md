@@ -147,6 +147,26 @@ DuckDB tables written to `catalogue.duckdb`:
 See `sample_queries.sql` for semantic catalogue status, verification, evaluation, and search
 examples.
 
+## Following Jesus Rename Plan
+
+Use the semantic catalogue database to generate a readable, reversible rename plan without changing
+files:
+
+```bash
+python scripts/plan_following_jesus_rename.py
+python scripts/validate_following_jesus_rename.py --mode before
+python scripts/rename_following_jesus_files.py
+```
+
+The naming scheme is:
+
+- module folder: `FJ-M03 Living in the Family`
+- disc folder: `Disc 02`
+- file name: `FJ-M03-D02-T09 - Jesus Calls the First Disciples.m4a`
+
+`scripts/rename_following_jesus_files.py` is dry-run by default. Use `--apply` only after
+reviewing the generated plan and validation report.
+
 ## Run SQL (container‑friendly)
 
 - Use the helper to run the DuckDB CLI inside the Dev Container (or on host if already inside):
