@@ -13,6 +13,8 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 - Tests: add `tests/test_sample_queries.py` to execute the "Top cameras and lenses" query from `sample_queries.sql` against the local DuckDB (skips gracefully if unavailable).
 - Docs: document the Following Jesus semantic audio catalogue workflow, output files,
   resumability/status/verification/evaluation commands, DuckDB tables, and example queries.
+- Verification: check transcript SRT end times against source audio duration so partial
+  transcriptions are flagged as short outputs.
 
 ### Changed
 

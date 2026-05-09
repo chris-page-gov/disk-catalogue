@@ -15,6 +15,7 @@ from disk_catalogue.audio_semantic import (
     is_generic_title,
     load_gold_questions,
     normalise_space,
+    parse_srt_end_seconds,
     parse_srt_text,
     score_gold_question,
     score_gold_questions,
@@ -68,6 +69,8 @@ def test_parse_srt_text_extracts_only_caption_lines(tmp_path: Path) -> None:
 
     assert parse_srt_text(srt) == "Hello there. Second line."
     assert parse_srt_text(tmp_path / "missing.srt") == ""
+    assert parse_srt_end_seconds(srt) == 2.0
+    assert parse_srt_end_seconds(tmp_path / "missing.srt") is None
 
 
 def test_reference_and_speaker_extraction() -> None:
@@ -224,6 +227,39 @@ def test_verify_catalogue_outputs_reports_missing_and_empty(tmp_path: Path) -> N
     assert result.transcript_files == 2
     assert result.missing_catalogue == ["two"]
     assert result.empty_transcripts == ["two"]
+
+
+def test_verify_catalogue_outputs_flags_short_transcripts(tmp_path: Path) -> None:
+    record_full = make_record(file_key="full")
+    record_short = make_record(file_key="short")
+    full_txt = tmp_path / "full.txt"
+    full_txt.write_text("text", encoding="utf-8")
+    full_srt = tmp_path / "full.srt"
+    full_srt.write_text(
+        "1\n00:00:00,000 --> 00:04:05,000\nText.\n",
+        encoding="utf-8",
+    )
+    short_txt = tmp_path / "short.txt"
+    short_txt.write_text("text", encoding="utf-8")
+    short_srt = tmp_path / "short.srt"
+    short_srt.write_text(
+        "1\n00:00:00,000 --> 00:01:00,000\nText.\n",
+        encoding="utf-8",
+    )
+
+    result = verify_catalogue_outputs(
+        [record_full, record_short],
+        {
+            "full": build_semantic_entry(record_full, "text", full_txt, full_srt),
+            "short": build_semantic_entry(record_short, "text", short_txt, short_srt),
+        },
+        {"full": full_txt, "short": short_txt},
+        {"full": full_srt, "short": short_srt},
+        duration_tolerance_seconds=5.0,
+    )
+
+    assert not result.complete
+    assert result.short_transcripts == ["short"]
 
 
 def test_gold_question_loading_and_scoring(tmp_path: Path) -> None:

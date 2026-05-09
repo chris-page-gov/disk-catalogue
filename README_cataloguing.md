@@ -251,8 +251,10 @@ exports are refreshed every `--checkpoint-interval` completed files, then again 
 
 ### Verification and evaluation
 
-Verification rebuilds exports and checks that every expected metadata row has a catalogue sidecar
-and non-empty transcript:
+Verification rebuilds exports and checks that every expected metadata row has a catalogue sidecar,
+non-empty transcript, and SRT output whose last caption ends within 10 seconds of the source audio
+duration. This catches partial outputs such as a transcript that stops after the first few minutes
+of a longer track.
 
 ```bash
 python scripts/catalogue_following_jesus_semantic.py --verify
@@ -282,7 +284,7 @@ Each export replaces these tables in `catalogue.duckdb`:
   source fingerprint fields, start/end/failure timestamps, transcript and sidecar paths,
   elapsed time, error, and latest semantic hints.
 - `audio_semantic_catalogue_verification` — one-row verification summary with expected counts
-  and JSON/list columns for missing or empty outputs.
+  and JSON/list columns for missing, empty, or duration-short outputs.
 - `audio_semantic_catalogue_eval` — optional evaluation rows: `question_id`, `score`,
   `max_score`, `passed`, and `details_json`.
 

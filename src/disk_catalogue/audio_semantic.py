@@ -151,6 +151,7 @@ class VerificationResult:
     missing_transcripts: list[str]
     empty_transcripts: list[str]
     verified_at: str
+    short_transcripts: list[str] = field(default_factory=list)
 
     @property
     def complete(self) -> bool:
@@ -159,6 +160,7 @@ class VerificationResult:
             and not self.missing_catalogue
             and not self.missing_transcripts
             and not self.empty_transcripts
+            and not self.short_transcripts
         )
 
 
@@ -220,6 +222,23 @@ def transcript_output_stem(record: AudioCatalogueRecord, output_dir: Path) -> Pa
 def parse_srt_timestamp(value: str) -> float:
     hours, minutes, seconds = value.replace(",", ".").split(":")
     return int(hours) * 3600 + int(minutes) * 60 + float(seconds)
+
+
+def parse_srt_end_seconds(path: Path) -> float | None:
+    if not path.exists():
+        return None
+    latest_end: float | None = None
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if "-->" not in line:
+            continue
+        _start, end = line.split("-->", 1)
+        end_timestamp = end.strip().split()[0]
+        try:
+            end_seconds = parse_srt_timestamp(end_timestamp)
+        except (ValueError, IndexError):
+            continue
+        latest_end = end_seconds if latest_end is None else max(latest_end, end_seconds)
+    return latest_end
 
 
 def parse_srt_text(path: Path) -> str:
@@ -517,10 +536,13 @@ def verify_catalogue_outputs(
     records: Sequence[AudioCatalogueRecord],
     entries: Mapping[str, SemanticEntry],
     transcript_paths: Mapping[str, Path],
+    srt_paths: Mapping[str, Path] | None = None,
+    duration_tolerance_seconds: float = 10.0,
 ) -> VerificationResult:
     missing_catalogue: list[str] = []
     missing_transcripts: list[str] = []
     empty_transcripts: list[str] = []
+    short_transcripts: list[str] = []
     transcript_count = 0
 
     for record in records:
@@ -533,6 +555,13 @@ def verify_catalogue_outputs(
         transcript_count += 1
         if transcript_path.stat().st_size == 0:
             empty_transcripts.append(record.file_key)
+        if srt_paths is not None and record.duration_seconds is not None:
+            srt_path = srt_paths.get(record.file_key)
+            srt_end_seconds = parse_srt_end_seconds(srt_path) if srt_path else None
+            if srt_end_seconds is None:
+                short_transcripts.append(record.file_key)
+            elif srt_end_seconds + duration_tolerance_seconds < record.duration_seconds:
+                short_transcripts.append(record.file_key)
 
     return VerificationResult(
         total_files=len(records),
@@ -542,6 +571,7 @@ def verify_catalogue_outputs(
         missing_transcripts=missing_transcripts,
         empty_transcripts=empty_transcripts,
         verified_at=utc_now_iso(),
+        short_transcripts=short_transcripts,
     )
 
 

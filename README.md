@@ -134,8 +134,8 @@ DuckDB tables written to `catalogue.duckdb`:
 - `audio_semantic_catalogue_status`: per-file processing state, source fingerprint,
   transcript/sidecar paths, elapsed time, failures, and latest inferred metadata.
 - `audio_semantic_catalogue_verification`: one-row completeness check covering expected files,
-  catalogued files, transcript files, missing catalogue rows, missing transcripts, and empty
-  transcripts.
+  catalogued files, transcript files, missing catalogue rows, missing transcripts, empty
+  transcripts, and SRT end-time checks for transcripts that stop before the source audio ends.
 - `audio_semantic_catalogue_eval`: optional gold-question scores with pass/fail and details JSON.
 
 See `sample_queries.sql` for semantic catalogue status, verification, evaluation, and search

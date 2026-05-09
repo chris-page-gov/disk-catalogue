@@ -244,7 +244,8 @@ def export_outputs(
     transcript_map = {
         record.file_key: transcript_paths(record, output_dir)[0] for record in records
     }
-    verification = verify_catalogue_outputs(records, entries, transcript_map)
+    srt_map = {record.file_key: transcript_paths(record, output_dir)[1] for record in records}
+    verification = verify_catalogue_outputs(records, entries, transcript_map, srt_map)
     verification_row = asdict(verification)
 
     write_csv(output_dir / "semantic_catalogue.csv", entry_rows)

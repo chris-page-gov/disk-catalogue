@@ -133,6 +133,7 @@ SELECT total_files,
        missing_catalogue,
        missing_transcripts,
        empty_transcripts,
+       short_transcripts,
        verified_at
 FROM audio_semantic_catalogue_verification;
 
