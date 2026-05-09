@@ -18,8 +18,19 @@ venv/
 .coverage*
 htmlcov/
 .cache/
-pytest_cache/
+.pytest_cache/
+.ruff_cache/
 .mypy_cache/
+.pyre/
+.hypothesis/
+.tox/
+.nox/
+.dmypy.json
+dmypy.json
+
+# Local package/tool caches
+.uv-cache/
+pip-wheel-metadata/
 
 # macOS
 .DS_Store
@@ -65,7 +76,17 @@ node_modules/
 coverage.xml
 
 # Lock files (uv generates .venv, but keep optional)
+/uv.lock
 pm-debug.log*
+
+# Local model / ML caches
+/models/
+/model-cache/
+/.huggingface/
+/.hf_cache/
+/.torch/
+/.whisper/
+/.pyannote/
 
 # Generated docs
 site/
