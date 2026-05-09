@@ -240,9 +240,7 @@ def load_entries(
     return entries
 
 
-def write_csv(
-    path: Path, rows: list[dict[str, Any]], fieldnames: list[str] | None = None
-) -> None:
+def write_csv(path: Path, rows: list[dict[str, Any]], fieldnames: list[str] | None = None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if not rows and fieldnames is None:
         path.write_text("", encoding="utf-8")
@@ -276,9 +274,9 @@ def export_outputs(
     }
     srt_map = {record.file_key: transcript_paths(record, output_dir)[1] for record in records}
     duplicate_audit = find_duplicate_groups(records) if run_duplicate_audit else None
-    duplicate_rows = [
-        duplicate_group_row(group) for group in duplicate_audit.groups
-    ] if duplicate_audit else []
+    duplicate_rows = (
+        [duplicate_group_row(group) for group in duplicate_audit.groups] if duplicate_audit else []
+    )
     verification = verify_catalogue_outputs(
         records,
         entries,

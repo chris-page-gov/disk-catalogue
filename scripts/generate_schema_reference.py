@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from __future__ import annotations
-
 """Generate a markdown schema reference for the catalogue DuckDB.
 
 Usage:
@@ -12,10 +10,12 @@ Known/derived columns receive explicit descriptions; other columns from the
 ExifTool CSVs are labeled as raw ExifTool fields.
 """
 
+from __future__ import annotations
+
 import argparse
+from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
 
 import duckdb
 
@@ -30,7 +30,9 @@ class Column:
 KNOWN_COLUMN_DESCRIPTIONS: dict[str, str] = {
     # Canonical/derived columns in views
     "Drive": "Volume label parsed from SourceFile (/host/Volumes/<Drive>/...).",
-    "RelativePath": "Path within the drive root (SourceFile without the /host/Volumes/<Drive>/ prefix).",
+    "RelativePath": (
+        "Path within the drive root (SourceFile without the /host/Volumes/<Drive>/ prefix)."
+    ),
     "RelativeDirectory": "Directory component of RelativePath (no leading slash).",
     "FileExt": "Lowercased file extension without the dot.",
     "FileKey": "Stable per-file identifier: hash(Drive, RelativePath, FileSize#).",
@@ -128,7 +130,9 @@ def describe_view(con: duckdb.DuckDBPyConnection, name: str) -> list[Column]:
             Column(
                 name=col_name,
                 typ=col_type,
-                desc=KNOWN_COLUMN_DESCRIPTIONS.get(col_name, "Raw ExifTool field or derived column."),
+                desc=KNOWN_COLUMN_DESCRIPTIONS.get(
+                    col_name, "Raw ExifTool field or derived column."
+                ),
             )
         )
     return result
@@ -193,14 +197,16 @@ def main() -> None:
         "\n\n"
     )
 
-    out.append(md_header(2, "How It’s Built"))
-    out.append(md_bullets(
-        [
-            "Raw CSVs from scans load into *_raw tables (schema auto‑detected).",
-            "Views (files/photos/videos) add derived identifiers: Drive, RelativePath, RelativeDirectory, FileExt, FileKey.",
-            "Operational tables track ingests and scans: ingested_files, drives, drive_scans.",
-        ]
-    ))
+    out.append(md_header(2, "How It's Built"))
+    out.append(
+        md_bullets(
+            [
+                "Raw CSVs from scans load into *_raw tables (schema auto-detected).",
+                "Views add identifiers: Drive, RelativePath, RelativeDirectory, FileExt, FileKey.",
+                "Operational tables track ingests and scans: ingested_files, drives, drive_scans.",
+            ]
+        )
+    )
 
     # Tables
     out.append(md_header(2, "Tables"))

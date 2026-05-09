@@ -293,13 +293,9 @@ def validate_plan_rows(
             already_renamed += 1
         elif not has_source and not has_target:
             missing += 1
-            issues.append(
-                ValidationIssue("error", file_key, "neither source nor target exists")
-            )
+            issues.append(ValidationIssue("error", file_key, "neither source nor target exists"))
         elif source.resolve() != target.resolve():
-            issues.append(
-                ValidationIssue("error", file_key, "both source and target exist")
-            )
+            issues.append(ValidationIssue("error", file_key, "both source and target exist"))
 
         path_to_check = target if has_target else source
         if path_to_check.exists() and size is not None and path_to_check.stat().st_size != size:
@@ -313,9 +309,7 @@ def validate_plan_rows(
         if verify_hash and row.get("source_sha256") and path_to_check.exists():
             actual_hash = file_sha256(path_to_check)
             if actual_hash != row["source_sha256"]:
-                issues.append(
-                    ValidationIssue("error", file_key, "sha256 mismatch")
-                )
+                issues.append(ValidationIssue("error", file_key, "sha256 mismatch"))
 
     if mode == "before" and target_present:
         issues.append(ValidationIssue("error", "", "target files already exist"))

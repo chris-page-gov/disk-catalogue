@@ -25,4 +25,4 @@ else
   black --check . || true
 fi
 
-mypy .
+mypy

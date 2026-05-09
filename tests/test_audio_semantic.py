@@ -98,8 +98,7 @@ def test_parse_srt_text_extracts_only_caption_lines(tmp_path: Path) -> None:
 
 def test_reference_and_speaker_extraction() -> None:
     text = (
-        "Avery Willis, Jim Slack and Grant Lovejoy discuss John 12:24, "
-        "Genesis 3, and Mark 5:1-20."
+        "Avery Willis, Jim Slack and Grant Lovejoy discuss John 12:24, Genesis 3, and Mark 5:1-20."
     )
 
     assert extract_bible_references(text) == ["John 12:24", "Genesis 3", "Mark 5:1-20"]
@@ -310,12 +309,8 @@ def test_duplicate_audit_finds_exact_and_folder_sequence_matches(tmp_path: Path)
     ]
 
     audit = find_duplicate_groups(records)
-    exact_groups = [
-        group for group in audit.groups if group.duplicate_kind == "exact_sha256"
-    ]
-    folder_groups = [
-        group for group in audit.groups if group.duplicate_kind == "folder_sequence"
-    ]
+    exact_groups = [group for group in audit.groups if group.duplicate_kind == "exact_sha256"]
+    folder_groups = [group for group in audit.groups if group.duplicate_kind == "folder_sequence"]
 
     assert audit.source_files_checked == 6
     assert exact_groups[0].file_keys == ["exact-one", "exact-two"]

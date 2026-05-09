@@ -136,8 +136,12 @@ def derive_lists_from_files_csv(files_csv: Path, outdir_drive: Path) -> tuple[Pa
                 continue
             # Skip AppleDouble and common hidden/system files that can appear on NTFS/macOS
             name = Path(src).name
-            # Skip dot-underscore and dot-double-underscore AppleDouble variants and common hidden files
-            if name.startswith("._") or name.startswith(".__") or name in {".DS_Store", "Thumbs.db", "desktop.ini"}:
+            # Skip AppleDouble variants and common hidden files.
+            if name.startswith(("._", ".__")) or name in {
+                ".DS_Store",
+                "Thumbs.db",
+                "desktop.ini",
+            }:
                 continue
             ext = Path(src).suffix.lower().lstrip(".")
             if ext in PHOTO_EXT:
@@ -159,8 +163,7 @@ def count_csv_rows(p: Path | None) -> int:
 
 
 def ensure_drive_scans_table(con: duckdb.DuckDBPyConnection) -> None:
-    con.execute(
-        """
+    con.execute("""
         CREATE TABLE IF NOT EXISTS drive_scans (
           drive_label TEXT,
           started_at TIMESTAMP,
@@ -173,8 +176,7 @@ def ensure_drive_scans_table(con: duckdb.DuckDBPyConnection) -> None:
           photos_rows BIGINT,
           videos_rows BIGINT
         );
-        """
-    )
+        """)
 
 
 def insert_drive_scan(
@@ -319,8 +321,7 @@ def main() -> None:
         )
         # Record/update drive metadata snapshot in DB even if no scans are needed
         con = duckdb.connect(args.db)
-        con.execute(
-            """
+        con.execute("""
             CREATE TABLE IF NOT EXISTS drives (
               drive_label TEXT PRIMARY KEY,
               mac_mount TEXT,
@@ -329,8 +330,7 @@ def main() -> None:
               notes TEXT,
               last_scanned TIMESTAMP
             );
-            """
-        )
+            """)
         # Reload full manifest row
         with open(args.manifest, newline="", encoding="utf-8") as mf:
             r = _csv.DictReader(mf)
@@ -420,8 +420,7 @@ def main() -> None:
 
     # Record/update drive metadata snapshot in DB and write drive_scans history
     con = duckdb.connect(args.db)
-    con.execute(
-        """
+    con.execute("""
         CREATE TABLE IF NOT EXISTS drives (
           drive_label TEXT PRIMARY KEY,
           mac_mount TEXT,
@@ -430,8 +429,7 @@ def main() -> None:
           notes TEXT,
           last_scanned TIMESTAMP
         );
-        """
-    )
+        """)
     mac_mount = entry.mac_mount or None
     # We also store raw platform_mount string for reference if present
     # Extract other fields directly from manifest if available

@@ -436,9 +436,7 @@ def infer_known_story_reference(text: str) -> str | None:
         return "Genesis 3"
     if "feed my sheep" in lower and "peter" in lower:
         return "John 21:1-22"
-    if "tabernacle" in lower and (
-        "moses" in lower or "glory of the lord filled" in lower
-    ):
+    if "tabernacle" in lower and ("moses" in lower or "glory of the lord filled" in lower):
         return "Exodus 40"
     if "lazarus" in lower and (
         "grain of wheat" in lower or "kernel of wheat" in lower or "single seed" in lower
@@ -528,9 +526,7 @@ def suggest_semantic_title(record: AudioCatalogueRecord, transcript_text: str) -
         return "Jesus restores Peter: feed my sheep and follow me"
     if "ask the right kinds of questions" in lower:
         return "How to ask story dialogue questions"
-    if "tabernacle" in lower and (
-        "moses" in lower or "glory of the lord filled" in lower
-    ):
+    if "tabernacle" in lower and ("moses" in lower or "glory of the lord filled" in lower):
         return "Moses sets up the tabernacle and God's glory fills it"
     if "lazarus" in lower and (
         "grain of wheat" in lower or "kernel of wheat" in lower or "single seed" in lower
@@ -718,16 +714,16 @@ def verify_catalogue_outputs(
             elif srt_end_seconds + duration_tolerance_seconds < record.duration_seconds:
                 short_transcripts.append(record.file_key)
 
-    exact_groups = [
-        group
-        for group in duplicate_audit.groups
-        if group.duplicate_kind == "exact_sha256"
-    ] if duplicate_audit else []
-    folder_groups = [
-        group
-        for group in duplicate_audit.groups
-        if group.duplicate_kind == "folder_sequence"
-    ] if duplicate_audit else []
+    exact_groups = (
+        [group for group in duplicate_audit.groups if group.duplicate_kind == "exact_sha256"]
+        if duplicate_audit
+        else []
+    )
+    folder_groups = (
+        [group for group in duplicate_audit.groups if group.duplicate_kind == "folder_sequence"]
+        if duplicate_audit
+        else []
+    )
 
     return VerificationResult(
         total_files=len(records),

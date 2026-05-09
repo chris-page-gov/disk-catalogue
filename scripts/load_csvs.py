@@ -136,8 +136,7 @@ def ingest_file(con: duckdb.DuckDBPyConnection, path: Path, table: str) -> None:
 
 def ensure_derived_views(con: duckdb.DuckDBPyConnection) -> None:
     # Create convenient views with derived identifiers and drive/path parsing
-    con.execute(
-        r"""
+    con.execute(r"""
         CREATE OR REPLACE VIEW files AS
         SELECT
           *,
@@ -151,10 +150,8 @@ def ensure_derived_views(con: duckdb.DuckDBPyConnection) -> None:
             CAST("FileSize#" AS BIGINT)
           ) AS FileKey
         FROM files_raw;
-        """
-    )
-    con.execute(
-        r"""
+        """)
+    con.execute(r"""
         CREATE OR REPLACE VIEW photos AS
         SELECT
           *,
@@ -168,10 +165,8 @@ def ensure_derived_views(con: duckdb.DuckDBPyConnection) -> None:
             CAST("FileSize#" AS BIGINT)
           ) AS FileKey
         FROM photos_raw;
-        """
-    )
-    con.execute(
-        r"""
+        """)
+    con.execute(r"""
         CREATE OR REPLACE VIEW videos AS
         SELECT
           *,
@@ -185,8 +180,7 @@ def ensure_derived_views(con: duckdb.DuckDBPyConnection) -> None:
             CAST("FileSize#" AS BIGINT)
           ) AS FileKey
         FROM videos_raw;
-        """
-    )
+        """)
 
 
 def main() -> None:

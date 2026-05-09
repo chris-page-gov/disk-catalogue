@@ -30,12 +30,10 @@ def test_top_cameras_and_lenses() -> None:
 
     con = duckdb.connect(str(db_path))
     # Ensure the photos view exists; otherwise skip gracefully
-    exists = con.execute(
-        """
+    exists = con.execute("""
         SELECT 1 FROM information_schema.tables
         WHERE table_schema = 'main' AND table_name = 'photos' LIMIT 1
-        """
-    ).fetchone()
+        """).fetchone()
     if not exists:
         pytest.skip("photos view not found; run ingestion first")
 
@@ -48,8 +46,7 @@ def test_top_cameras_and_lenses() -> None:
         pytest.skip("photos view lacks Model/LensModel; rescan photos to include EXIF tags")
 
     sql = (
-        "SELECT Model, LensModel, COUNT(*) AS n "
-        "FROM photos GROUP BY 1,2 ORDER BY n DESC LIMIT 25;"
+        "SELECT Model, LensModel, COUNT(*) AS n FROM photos GROUP BY 1,2 ORDER BY n DESC LIMIT 25;"
     )
     rows = con.execute(sql).fetchall()
 

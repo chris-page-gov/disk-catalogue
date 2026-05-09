@@ -74,13 +74,11 @@ REQUIREMENTS: tuple[Requirement, ...] = (
 
 
 def list_relations(con: duckdb.DuckDBPyConnection) -> set[tuple[str, str]]:
-    rows = con.sql(
-        """
+    rows = con.sql("""
         SELECT table_name, table_type
         FROM information_schema.tables
         WHERE table_schema = 'main'
-        """
-    ).fetchall()
+        """).fetchall()
     return {(r[0], r[1].lower()) for r in rows}
 
 

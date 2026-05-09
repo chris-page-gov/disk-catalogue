@@ -59,9 +59,7 @@ def test_album_mapping_covers_known_and_unknown_modules() -> None:
         "Unexpected/Album:Name": "FJ-M00",
     }
 
-    assert {
-        album: album_spec_for_folder(album).module_code for album in cases
-    } == cases
+    assert {album: album_spec_for_folder(album).module_code for album in cases} == cases
 
 
 def test_parse_helpers_handle_empty_values() -> None:

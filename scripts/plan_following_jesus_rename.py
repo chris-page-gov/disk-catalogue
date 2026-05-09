@@ -39,8 +39,7 @@ from disk_catalogue.following_jesus_rename import (
 def load_rows(db_path: Path) -> list[dict[str, Any]]:
     con = duckdb.connect(str(db_path), read_only=True)
     try:
-        rows = con.execute(
-            """
+        rows = con.execute("""
             select
               m.file_key,
               m.destination_path as source_path,
@@ -57,8 +56,7 @@ def load_rows(db_path: Path) -> list[dict[str, Any]]:
             from audio_semantic_source_metadata m
             join audio_semantic_catalogue c using (file_key)
             order by m.album_folder, disc_index, track_index, m.file_name
-            """
-        ).fetchall()
+            """).fetchall()
         columns = [item[0] for item in con.description]
     finally:
         con.close()
