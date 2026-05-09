@@ -19,6 +19,8 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
   duplicate album-folder sequences before marking the semantic catalogue complete.
 - Metadata: export the full source audio metadata rows, including raw `metadata_json`, into
   `semantic_catalogue_source_metadata.csv` and `audio_semantic_source_metadata`.
+- Verification: allow a 20-second non-speech tail when comparing SRT end times with audio
+  duration, so normal outro music or silence does not fail completeness checks.
 
 ### Changed
 

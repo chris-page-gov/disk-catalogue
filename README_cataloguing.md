@@ -256,7 +256,7 @@ exports are refreshed every `--checkpoint-interval` completed files, then again 
 ### Verification and evaluation
 
 Verification rebuilds exports and checks that every expected metadata row has a catalogue sidecar,
-non-empty transcript, and SRT output whose last caption ends within 10 seconds of the source audio
+non-empty transcript, and SRT output whose last caption ends within 20 seconds of the source audio
 duration. This catches partial outputs such as a transcript that stops after the first few minutes
 of a longer track. It also runs the duplicate audit before reporting completion.
 

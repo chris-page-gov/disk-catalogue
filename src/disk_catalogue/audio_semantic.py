@@ -691,7 +691,7 @@ def verify_catalogue_outputs(
     entries: Mapping[str, SemanticEntry],
     transcript_paths: Mapping[str, Path],
     srt_paths: Mapping[str, Path] | None = None,
-    duration_tolerance_seconds: float = 10.0,
+    duration_tolerance_seconds: float = 20.0,
     duplicate_audit: DuplicateAudit | None = None,
 ) -> VerificationResult:
     missing_catalogue: list[str] = []

@@ -55,6 +55,17 @@ DEFAULT_DB = Path("catalogue.duckdb")
 DEFAULT_MODEL = Path("output/models/ggml-base.en.bin")
 DEFAULT_GOLD = Path("eval/following_jesus_gold_questions.json")
 STATE_VERSION = 1
+DUPLICATE_FIELDNAMES = [
+    "duplicate_kind",
+    "duplicate_key",
+    "group_count",
+    "file_count",
+    "file_keys",
+    "album_folders",
+    "file_names",
+    "destination_paths",
+    "evidence_json",
+]
 
 
 def int_or_none(value: str | None) -> int | None:
@@ -229,12 +240,14 @@ def load_entries(
     return entries
 
 
-def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
+def write_csv(
+    path: Path, rows: list[dict[str, Any]], fieldnames: list[str] | None = None
+) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    if not rows:
+    if not rows and fieldnames is None:
         path.write_text("", encoding="utf-8")
         return
-    fieldnames = list(rows[0].keys())
+    fieldnames = fieldnames or list(rows[0].keys())
     with path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
@@ -278,7 +291,11 @@ def export_outputs(
     write_csv(output_dir / "semantic_catalogue.csv", entry_rows)
     write_csv(output_dir / "semantic_catalogue_source_metadata.csv", source_metadata_rows)
     write_csv(output_dir / "semantic_catalogue_status.csv", state_rows)
-    write_csv(output_dir / "semantic_catalogue_duplicates.csv", duplicate_rows)
+    write_csv(
+        output_dir / "semantic_catalogue_duplicates.csv",
+        duplicate_rows,
+        DUPLICATE_FIELDNAMES,
+    )
     write_json_atomic(output_dir / "semantic_catalogue_verification.json", verification_row)
 
     eval_rows: list[dict[str, Any]] = []
@@ -306,7 +323,12 @@ def export_outputs(
             "audio_semantic_catalogue_verification": [verification_row],
             "audio_semantic_catalogue_eval": eval_rows,
         }.items():
-            df = pd.DataFrame(rows)
+            columns = (
+                DUPLICATE_FIELDNAMES
+                if table_name == "audio_semantic_catalogue_duplicates"
+                else None
+            )
+            df = pd.DataFrame(rows, columns=columns)
             con.register("incoming_df", df)
             con.execute(f"CREATE OR REPLACE TABLE {table_name} AS SELECT * FROM incoming_df")
             con.unregister("incoming_df")
