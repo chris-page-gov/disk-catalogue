@@ -134,8 +134,23 @@ SELECT total_files,
        missing_transcripts,
        empty_transcripts,
        short_transcripts,
+       duplicate_audit_complete,
+       exact_duplicate_groups,
+       exact_duplicate_files,
+       folder_duplicate_groups,
+       folder_duplicate_folders,
        verified_at
 FROM audio_semantic_catalogue_verification;
+
+-- Duplicate audit groups for the Following Jesus semantic catalogue
+SELECT duplicate_kind,
+       duplicate_key,
+       group_count,
+       file_count,
+       album_folders,
+       file_names
+FROM audio_semantic_catalogue_duplicates
+ORDER BY duplicate_kind, file_count DESC, duplicate_key;
 
 -- Semantic catalogue rows with low confidence or missing Bible references
 SELECT album_folder,

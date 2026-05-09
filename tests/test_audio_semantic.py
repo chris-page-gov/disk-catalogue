@@ -1,15 +1,18 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 
 from disk_catalogue.audio_semantic import (
     AudioCatalogueRecord,
     GoldQuestion,
     build_semantic_entry,
+    duplicate_group_row,
     extract_bible_references,
     extract_keywords,
     extract_speaker_names,
+    find_duplicate_groups,
     first_sentence,
     infer_known_story_reference,
     is_generic_title,
@@ -39,6 +42,26 @@ def make_record(title: str = "Track 08", file_key: str = "k1") -> AudioCatalogue
         disc_index=1,
         track_index=8,
         duration_seconds=249.0,
+    )
+
+
+def record_with_path(
+    base: AudioCatalogueRecord,
+    path: Path,
+    file_key: str,
+    album_folder: str,
+    file_name: str,
+    track_index: int,
+) -> AudioCatalogueRecord:
+    return replace(
+        base,
+        file_key=file_key,
+        album_folder=album_folder,
+        file_name=file_name,
+        title=file_name.removesuffix(".m4a"),
+        destination_path=str(path),
+        track_index=track_index,
+        duration_seconds=10.0 + track_index,
     )
 
 
@@ -260,6 +283,77 @@ def test_verify_catalogue_outputs_flags_short_transcripts(tmp_path: Path) -> Non
 
     assert not result.complete
     assert result.short_transcripts == ["short"]
+
+
+def test_duplicate_audit_finds_exact_and_folder_sequence_matches(tmp_path: Path) -> None:
+    exact_one = tmp_path / "exact-one.m4a"
+    exact_two = tmp_path / "exact-two.m4a"
+    exact_one.write_bytes(b"same audio")
+    exact_two.write_bytes(b"same audio")
+    folder_a_one = tmp_path / "folder-a-01.m4a"
+    folder_a_two = tmp_path / "folder-a-02.m4a"
+    folder_b_one = tmp_path / "folder-b-01.m4a"
+    folder_b_two = tmp_path / "folder-b-02.m4a"
+    folder_a_one.write_bytes(b"aa")
+    folder_a_two.write_bytes(b"bbb")
+    folder_b_one.write_bytes(b"cc")
+    folder_b_two.write_bytes(b"ddd")
+
+    base = make_record()
+    records = [
+        record_with_path(base, exact_one, "exact-one", "Exact A", "same.m4a", 1),
+        record_with_path(base, exact_two, "exact-two", "Exact B", "same-copy.m4a", 1),
+        record_with_path(base, folder_a_one, "a1", "Folder A", "01.m4a", 1),
+        record_with_path(base, folder_a_two, "a2", "Folder A", "02.m4a", 2),
+        record_with_path(base, folder_b_one, "b1", "Folder B", "01.m4a", 1),
+        record_with_path(base, folder_b_two, "b2", "Folder B", "02.m4a", 2),
+    ]
+
+    audit = find_duplicate_groups(records)
+    exact_groups = [
+        group for group in audit.groups if group.duplicate_kind == "exact_sha256"
+    ]
+    folder_groups = [
+        group for group in audit.groups if group.duplicate_kind == "folder_sequence"
+    ]
+
+    assert audit.source_files_checked == 6
+    assert exact_groups[0].file_keys == ["exact-one", "exact-two"]
+    assert folder_groups[0].album_folders == ["Folder A", "Folder B"]
+    assert json.loads(duplicate_group_row(exact_groups[0])["file_keys"]) == [
+        "exact-one",
+        "exact-two",
+    ]
+
+
+def test_verify_catalogue_outputs_requires_duplicate_audit_for_completion(
+    tmp_path: Path,
+) -> None:
+    record = make_record()
+    transcript = tmp_path / "record.txt"
+    srt = tmp_path / "record.srt"
+    transcript.write_text("text", encoding="utf-8")
+    srt.write_text("1\n00:00:00,000 --> 00:04:09,000\nText.\n", encoding="utf-8")
+    entry = build_semantic_entry(record, "text", transcript, srt)
+    audit = find_duplicate_groups([replace(record, destination_path=str(transcript))])
+
+    without_audit = verify_catalogue_outputs(
+        [record],
+        {record.file_key: entry},
+        {record.file_key: transcript},
+        {record.file_key: srt},
+    )
+    with_audit = verify_catalogue_outputs(
+        [record],
+        {record.file_key: entry},
+        {record.file_key: transcript},
+        {record.file_key: srt},
+        duplicate_audit=audit,
+    )
+
+    assert not without_audit.complete
+    assert with_audit.complete
+    assert with_audit.duplicate_audit_complete
 
 
 def test_gold_question_loading_and_scoring(tmp_path: Path) -> None:

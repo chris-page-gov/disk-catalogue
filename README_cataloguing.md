@@ -227,6 +227,8 @@ Files are written below
   and latest semantic hints.
 - `semantic_catalogue.csv` — full exported semantic catalogue.
 - `semantic_catalogue_status.csv` — exported state rows.
+- `semantic_catalogue_duplicates.csv` — exact SHA-256 duplicate groups and duplicated
+  album-folder sequence groups.
 - `semantic_catalogue_verification.json` — completeness check.
 - `semantic_catalogue_evaluation.csv` — optional gold-question scoring output.
 
@@ -254,7 +256,7 @@ exports are refreshed every `--checkpoint-interval` completed files, then again 
 Verification rebuilds exports and checks that every expected metadata row has a catalogue sidecar,
 non-empty transcript, and SRT output whose last caption ends within 10 seconds of the source audio
 duration. This catches partial outputs such as a transcript that stops after the first few minutes
-of a longer track.
+of a longer track. It also runs the duplicate audit before reporting completion.
 
 ```bash
 python scripts/catalogue_following_jesus_semantic.py --verify
@@ -283,8 +285,11 @@ Each export replaces these tables in `catalogue.duckdb`:
 - `audio_semantic_catalogue_status` — one row per state record with `file_key`, `status`,
   source fingerprint fields, start/end/failure timestamps, transcript and sidecar paths,
   elapsed time, error, and latest semantic hints.
+- `audio_semantic_catalogue_duplicates` — exact content duplicate groups keyed by SHA-256,
+  plus duplicated album-folder sequence groups keyed by disc/track/name/title/duration/size.
 - `audio_semantic_catalogue_verification` — one-row verification summary with expected counts
-  and JSON/list columns for missing, empty, or duration-short outputs.
+  and JSON/list columns for missing, empty, or duration-short outputs, plus duplicate-audit
+  counts.
 - `audio_semantic_catalogue_eval` — optional evaluation rows: `question_id`, `score`,
   `max_score`, `passed`, and `details_json`.
 

@@ -15,6 +15,8 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
   resumability/status/verification/evaluation commands, DuckDB tables, and example queries.
 - Verification: check transcript SRT end times against source audio duration so partial
   transcriptions are flagged as short outputs.
+- Verification: add a duplicate audit export/table for exact SHA-256 audio duplicates and
+  duplicate album-folder sequences before marking the semantic catalogue complete.
 
 ### Changed
 

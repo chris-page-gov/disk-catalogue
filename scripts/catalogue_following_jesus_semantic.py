@@ -9,7 +9,8 @@ Inputs:
 Outputs:
   output/recovery_plans/following_jesus_team_ext10/semantic_catalogue/
   catalogue.duckdb tables: audio_semantic_catalogue, audio_semantic_catalogue_status,
-  audio_semantic_catalogue_verification, audio_semantic_catalogue_eval
+  audio_semantic_catalogue_duplicates, audio_semantic_catalogue_verification,
+  audio_semantic_catalogue_eval
 
 The command is resumable. It writes JSON status after each file, skips completed unchanged
 transcripts, keeps per-file semantic sidecars, and continues after individual failures.
@@ -36,6 +37,8 @@ from disk_catalogue.audio_semantic import (
     AudioCatalogueRecord,
     SemanticEntry,
     build_semantic_entry,
+    duplicate_group_row,
+    find_duplicate_groups,
     load_gold_questions,
     score_gold_questions,
     semantic_entry_from_mapping,
@@ -233,6 +236,7 @@ def export_outputs(
     records: list[AudioCatalogueRecord],
     state: dict[str, Any],
     gold_path: Path | None,
+    run_duplicate_audit: bool = True,
 ) -> None:
     expected_file_keys = {record.file_key for record in records}
     entries = load_entries(output_dir, expected_file_keys)
@@ -245,11 +249,22 @@ def export_outputs(
         record.file_key: transcript_paths(record, output_dir)[0] for record in records
     }
     srt_map = {record.file_key: transcript_paths(record, output_dir)[1] for record in records}
-    verification = verify_catalogue_outputs(records, entries, transcript_map, srt_map)
+    duplicate_audit = find_duplicate_groups(records) if run_duplicate_audit else None
+    duplicate_rows = [
+        duplicate_group_row(group) for group in duplicate_audit.groups
+    ] if duplicate_audit else []
+    verification = verify_catalogue_outputs(
+        records,
+        entries,
+        transcript_map,
+        srt_map,
+        duplicate_audit=duplicate_audit,
+    )
     verification_row = asdict(verification)
 
     write_csv(output_dir / "semantic_catalogue.csv", entry_rows)
     write_csv(output_dir / "semantic_catalogue_status.csv", state_rows)
+    write_csv(output_dir / "semantic_catalogue_duplicates.csv", duplicate_rows)
     write_json_atomic(output_dir / "semantic_catalogue_verification.json", verification_row)
 
     eval_rows: list[dict[str, Any]] = []
@@ -272,6 +287,7 @@ def export_outputs(
         for table_name, rows in {
             "audio_semantic_catalogue": entry_rows,
             "audio_semantic_catalogue_status": state_rows,
+            "audio_semantic_catalogue_duplicates": duplicate_rows,
             "audio_semantic_catalogue_verification": [verification_row],
             "audio_semantic_catalogue_eval": eval_rows,
         }.items():
@@ -456,7 +472,14 @@ def process_records(args: argparse.Namespace) -> int:
         write_json_atomic(state_path, state)
 
         if processed_since_export >= args.checkpoint_interval:
-            export_outputs(args.db, output_dir, records, state, args.gold_questions)
+            export_outputs(
+                args.db,
+                output_dir,
+                records,
+                state,
+                args.gold_questions,
+                run_duplicate_audit=False,
+            )
             processed_since_export = 0
 
     export_outputs(args.db, output_dir, records, state, args.gold_questions)

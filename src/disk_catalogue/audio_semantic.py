@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import json
 import re
+from collections import defaultdict
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
+from hashlib import sha256
 from pathlib import Path
 from typing import Any
 
@@ -152,6 +154,12 @@ class VerificationResult:
     empty_transcripts: list[str]
     verified_at: str
     short_transcripts: list[str] = field(default_factory=list)
+    duplicate_audit_complete: bool = False
+    duplicate_source_files_checked: int = 0
+    exact_duplicate_groups: int = 0
+    exact_duplicate_files: int = 0
+    folder_duplicate_groups: int = 0
+    folder_duplicate_folders: int = 0
 
     @property
     def complete(self) -> bool:
@@ -161,6 +169,7 @@ class VerificationResult:
             and not self.missing_transcripts
             and not self.empty_transcripts
             and not self.short_transcripts
+            and self.duplicate_audit_complete
         )
 
 
@@ -180,6 +189,25 @@ class GoldQuestionScore:
     max_score: float
     passed: bool
     details: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class DuplicateGroup:
+    duplicate_kind: str
+    duplicate_key: str
+    group_count: int
+    file_count: int
+    file_keys: list[str]
+    album_folders: list[str]
+    file_names: list[str]
+    destination_paths: list[str]
+    evidence_json: str
+
+
+@dataclass(frozen=True)
+class DuplicateAudit:
+    source_files_checked: int
+    groups: list[DuplicateGroup]
 
 
 def utc_now_iso() -> str:
@@ -217,6 +245,132 @@ def transcript_output_stem(record: AudioCatalogueRecord, output_dir: Path) -> Pa
     track = record.track_index if record.track_index is not None else "x"
     file_stem = slugify(Path(record.file_name).stem) or "audio"
     return output_dir / "transcripts" / album / f"d{disc}_t{track}_{record.file_key}_{file_stem}"
+
+
+def file_sha256(path: Path) -> str:
+    digest = sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _source_size(record: AudioCatalogueRecord) -> int | None:
+    source = Path(record.destination_path)
+    if not source.exists() or not source.is_file():
+        return None
+    return source.stat().st_size
+
+
+def duplicate_group_row(group: DuplicateGroup) -> dict[str, Any]:
+    row = asdict(group)
+    row["file_keys"] = json.dumps(group.file_keys)
+    row["album_folders"] = json.dumps(group.album_folders)
+    row["file_names"] = json.dumps(group.file_names)
+    row["destination_paths"] = json.dumps(group.destination_paths)
+    return row
+
+
+def find_exact_duplicate_groups(records: Sequence[AudioCatalogueRecord]) -> list[DuplicateGroup]:
+    by_size: dict[int, list[AudioCatalogueRecord]] = defaultdict(list)
+    for record in records:
+        size = _source_size(record)
+        if size is not None:
+            by_size[size].append(record)
+
+    groups: list[DuplicateGroup] = []
+    for size, candidates in sorted(by_size.items()):
+        if len(candidates) < 2:
+            continue
+        by_digest: dict[str, list[AudioCatalogueRecord]] = defaultdict(list)
+        for record in candidates:
+            by_digest[file_sha256(Path(record.destination_path))].append(record)
+        for digest, matches in sorted(by_digest.items()):
+            if len(matches) < 2:
+                continue
+            groups.append(
+                DuplicateGroup(
+                    duplicate_kind="exact_sha256",
+                    duplicate_key=digest,
+                    group_count=len(matches),
+                    file_count=len(matches),
+                    file_keys=[record.file_key for record in matches],
+                    album_folders=sorted({record.album_folder for record in matches}),
+                    file_names=[record.file_name for record in matches],
+                    destination_paths=[record.destination_path for record in matches],
+                    evidence_json=json.dumps({"sha256": digest, "size_bytes": size}),
+                )
+            )
+    return groups
+
+
+def _folder_signature(records: Sequence[AudioCatalogueRecord]) -> str:
+    items: list[dict[str, Any]] = []
+    for record in sorted(
+        records, key=lambda item: (item.disc_index or 0, item.track_index or 0, item.file_name)
+    ):
+        duration = (
+            round(record.duration_seconds, 1) if record.duration_seconds is not None else None
+        )
+        items.append(
+            {
+                "disc_index": record.disc_index,
+                "track_index": record.track_index,
+                "file_name": record.file_name.casefold(),
+                "title": normalise_space(record.title).casefold(),
+                "duration_seconds": duration,
+                "size_bytes": _source_size(record),
+            }
+        )
+    return json.dumps(items, sort_keys=True, separators=(",", ":"))
+
+
+def find_folder_duplicate_groups(records: Sequence[AudioCatalogueRecord]) -> list[DuplicateGroup]:
+    by_folder: dict[str, list[AudioCatalogueRecord]] = defaultdict(list)
+    for record in records:
+        by_folder[record.album_folder].append(record)
+
+    by_signature: dict[str, list[tuple[str, list[AudioCatalogueRecord]]]] = defaultdict(list)
+    for album_folder, folder_records in by_folder.items():
+        if folder_records:
+            signature = _folder_signature(folder_records)
+            signature_key = sha256(signature.encode("utf-8")).hexdigest()
+            by_signature[signature_key].append((album_folder, folder_records))
+
+    groups: list[DuplicateGroup] = []
+    for signature_key, folder_matches in sorted(by_signature.items()):
+        if len(folder_matches) < 2:
+            continue
+        matched_records = [
+            record for _album_folder, folder_records in folder_matches for record in folder_records
+        ]
+        groups.append(
+            DuplicateGroup(
+                duplicate_kind="folder_sequence",
+                duplicate_key=signature_key,
+                group_count=len(folder_matches),
+                file_count=len(matched_records),
+                file_keys=[record.file_key for record in matched_records],
+                album_folders=[album_folder for album_folder, _records in folder_matches],
+                file_names=[record.file_name for record in matched_records],
+                destination_paths=[record.destination_path for record in matched_records],
+                evidence_json=json.dumps(
+                    {
+                        "folder_count": len(folder_matches),
+                        "track_count_per_folder": len(folder_matches[0][1]),
+                        "signature_kind": "disc_track_file_title_duration_size",
+                    },
+                    sort_keys=True,
+                ),
+            )
+        )
+    return groups
+
+
+def find_duplicate_groups(records: Sequence[AudioCatalogueRecord]) -> DuplicateAudit:
+    source_files_checked = sum(1 for record in records if _source_size(record) is not None)
+    groups = [*find_exact_duplicate_groups(records), *find_folder_duplicate_groups(records)]
+    return DuplicateAudit(source_files_checked=source_files_checked, groups=groups)
 
 
 def parse_srt_timestamp(value: str) -> float:
@@ -538,6 +692,7 @@ def verify_catalogue_outputs(
     transcript_paths: Mapping[str, Path],
     srt_paths: Mapping[str, Path] | None = None,
     duration_tolerance_seconds: float = 10.0,
+    duplicate_audit: DuplicateAudit | None = None,
 ) -> VerificationResult:
     missing_catalogue: list[str] = []
     missing_transcripts: list[str] = []
@@ -563,6 +718,17 @@ def verify_catalogue_outputs(
             elif srt_end_seconds + duration_tolerance_seconds < record.duration_seconds:
                 short_transcripts.append(record.file_key)
 
+    exact_groups = [
+        group
+        for group in duplicate_audit.groups
+        if group.duplicate_kind == "exact_sha256"
+    ] if duplicate_audit else []
+    folder_groups = [
+        group
+        for group in duplicate_audit.groups
+        if group.duplicate_kind == "folder_sequence"
+    ] if duplicate_audit else []
+
     return VerificationResult(
         total_files=len(records),
         catalogued_files=len(entries),
@@ -572,6 +738,14 @@ def verify_catalogue_outputs(
         empty_transcripts=empty_transcripts,
         verified_at=utc_now_iso(),
         short_transcripts=short_transcripts,
+        duplicate_audit_complete=duplicate_audit is not None,
+        duplicate_source_files_checked=(
+            duplicate_audit.source_files_checked if duplicate_audit else 0
+        ),
+        exact_duplicate_groups=len(exact_groups),
+        exact_duplicate_files=sum(group.file_count for group in exact_groups),
+        folder_duplicate_groups=len(folder_groups),
+        folder_duplicate_folders=sum(group.group_count for group in folder_groups),
     )
 
 

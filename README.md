@@ -111,7 +111,7 @@ Default outputs go under `output/recovery_plans/following_jesus_team_ext10/seman
 - `transcripts/<album>/...txt`, `.srt`, and per-file `.semantic.json` sidecars.
 - `semantic_catalogue_state.json` for resumability and status.
 - `semantic_catalogue.csv`, `semantic_catalogue_status.csv`,
-  `semantic_catalogue_verification.json`, and optional
+  `semantic_catalogue_duplicates.csv`, `semantic_catalogue_verification.json`, and optional
   `semantic_catalogue_evaluation.csv`.
 
 The script is resumable. It skips completed files when the source size and mtime are unchanged,
@@ -133,9 +133,12 @@ DuckDB tables written to `catalogue.duckdb`:
   confidence, evidence JSON, and analysis backend.
 - `audio_semantic_catalogue_status`: per-file processing state, source fingerprint,
   transcript/sidecar paths, elapsed time, failures, and latest inferred metadata.
+- `audio_semantic_catalogue_duplicates`: exact SHA-256 duplicate groups and duplicated
+  album-folder sequence groups found during final verification.
 - `audio_semantic_catalogue_verification`: one-row completeness check covering expected files,
   catalogued files, transcript files, missing catalogue rows, missing transcripts, empty
-  transcripts, and SRT end-time checks for transcripts that stop before the source audio ends.
+  transcripts, SRT end-time checks for transcripts that stop before the source audio ends,
+  and whether the duplicate audit has run.
 - `audio_semantic_catalogue_eval`: optional gold-question scores with pass/fail and details JSON.
 
 See `sample_queries.sql` for semantic catalogue status, verification, evaluation, and search
