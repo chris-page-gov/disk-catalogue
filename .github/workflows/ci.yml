@@ -40,7 +40,7 @@ jobs:
         run: black --check . || true
 
       - name: Mypy
-        run: mypy .
+        run: mypy
 
       - name: Pytest (with coverage XML)
         run: |
