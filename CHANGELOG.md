@@ -17,6 +17,8 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
   transcriptions are flagged as short outputs.
 - Verification: add a duplicate audit export/table for exact SHA-256 audio duplicates and
   duplicate album-folder sequences before marking the semantic catalogue complete.
+- Metadata: export the full source audio metadata rows, including raw `metadata_json`, into
+  `semantic_catalogue_source_metadata.csv` and `audio_semantic_source_metadata`.
 
 ### Changed
 

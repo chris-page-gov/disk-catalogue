@@ -110,7 +110,8 @@ Default outputs go under `output/recovery_plans/following_jesus_team_ext10/seman
 
 - `transcripts/<album>/...txt`, `.srt`, and per-file `.semantic.json` sidecars.
 - `semantic_catalogue_state.json` for resumability and status.
-- `semantic_catalogue.csv`, `semantic_catalogue_status.csv`,
+- `semantic_catalogue.csv`, `semantic_catalogue_source_metadata.csv`,
+  `semantic_catalogue_status.csv`,
   `semantic_catalogue_duplicates.csv`, `semantic_catalogue_verification.json`, and optional
   `semantic_catalogue_evaluation.csv`.
 
@@ -131,6 +132,8 @@ DuckDB tables written to `catalogue.duckdb`:
 - `audio_semantic_catalogue`: one row per catalogued track with semantic title, type,
   Bible reference/book, speakers, storying role, summaries, keywords, transcript paths,
   confidence, evidence JSON, and analysis backend.
+- `audio_semantic_source_metadata`: the full source metadata CSV rows, preserving all extracted
+  embedded-tag fields and raw `metadata_json` for later re-analysis.
 - `audio_semantic_catalogue_status`: per-file processing state, source fingerprint,
   transcript/sidecar paths, elapsed time, failures, and latest inferred metadata.
 - `audio_semantic_catalogue_duplicates`: exact SHA-256 duplicate groups and duplicated

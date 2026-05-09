@@ -152,6 +152,21 @@ SELECT duplicate_kind,
 FROM audio_semantic_catalogue_duplicates
 ORDER BY duplicate_kind, file_count DESC, duplicate_key;
 
+-- Embedded/source metadata retained for later re-analysis
+SELECT file_key,
+       album_folder,
+       file_name,
+       title,
+       artist,
+       album,
+       genre,
+       itunes_cddb_ids,
+       itunes_ufid,
+       metadata_json
+FROM audio_semantic_source_metadata
+ORDER BY album_folder, disc_index, track_index
+LIMIT 25;
+
 -- Semantic catalogue rows with low confidence or missing Bible references
 SELECT album_folder,
        file_name,

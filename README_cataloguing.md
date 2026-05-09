@@ -226,6 +226,8 @@ Files are written below
 - `semantic_catalogue_state.json` — resumability state, source fingerprints, status, errors,
   and latest semantic hints.
 - `semantic_catalogue.csv` — full exported semantic catalogue.
+- `semantic_catalogue_source_metadata.csv` — full recovered metadata rows, including all extracted
+  tag fields and raw `metadata_json`.
 - `semantic_catalogue_status.csv` — exported state rows.
 - `semantic_catalogue_duplicates.csv` — exact SHA-256 duplicate groups and duplicated
   album-folder sequence groups.
@@ -282,6 +284,9 @@ Each export replaces these tables in `catalogue.duckdb`:
   `worldview_issue`, `summary_short`, `summary_long`, `keywords`, `transcript_path`,
   `srt_path`, `transcript_chars`, `metadata_confidence`, `evidence_json`, `created_at`,
   and `analysis_backend`.
+- `audio_semantic_source_metadata` — full row-level source metadata from `audio_metadata.csv`,
+  preserving every extracted tag column, raw `metadata_json`, source paths, iTunes identifiers,
+  bitrate/sample-rate fields, and timestamps.
 - `audio_semantic_catalogue_status` — one row per state record with `file_key`, `status`,
   source fingerprint fields, start/end/failure timestamps, transcript and sidecar paths,
   elapsed time, error, and latest semantic hints.
