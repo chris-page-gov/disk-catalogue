@@ -6,9 +6,37 @@ The format is based on Keep a Changelog and this project adheres to Semantic Ver
 
 ## [Unreleased]
 
+### Added
+
+- Postmortem: add a rebuildable assistant postmortem generator, tests, and a redacted
+  `postmortem-public/` wiki while keeping the full local archive ignored.
+- Postmortem navigation: add linked exchange breadcrumbs, session/phase/topic/entity/artifact
+  hubs, a surrogate catalogue, timeline, graph data, and facet registers for Obsidian-style
+  navigation.
+- Postmortem navigation: add turn pages and registers that group each user prompt with the
+  assistant answer and tool evidence that followed it.
+- Postmortem skill: document the rendering-compatibility rules, turn-level navigation contract,
+  and validation checks found while testing the generated wiki in Obsidian and VS Code.
+
 ### Fixed
 
 - CI: run mypy with the repository configuration so it matches `scripts/lint.sh`.
+- Docs: update the README version marker after the `v1.0.0` release.
+- Security: broaden postmortem public redaction and publication lint for common token, key, and
+  secret-assignment patterns.
+- Postmortem navigation: use table-safe Markdown links instead of aliased wikilinks inside table
+  cells so Obsidian does not split links across columns.
+- Postmortem navigation: replace raw HTML `<details>` sections with ordinary Markdown headings so
+  links render inside exchange surrogate sections.
+- Postmortem navigation: use standard Markdown links and headings as the visible format so native
+  VS Code Markdown preview renders the wiki without Obsidian-specific extensions.
+- Postmortem public detail: render redacted excerpts as escaped Markdown text instead of squashed
+  `text` code blocks.
+- Postmortem excerpts: clean Markdown/control syntax from short surrogate excerpts so navigation
+  pages do not show flattened headings, tags, links, or code spans.
+- Postmortem exchange pages: use meaningful exchange headings and escape reference-link-looking
+  placeholders such as `[REPO]` in visible text.
+- Git ignore: ignore local `.obsidian/` vault state throughout the repository.
 
 ## [1.0.0] - 2026-05-09
 

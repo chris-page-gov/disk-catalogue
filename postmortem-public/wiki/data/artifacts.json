@@ -1,0 +1,135 @@
+[
+  {
+    "notes": "release notes and post-release fixed item",
+    "path": "CHANGELOG.md",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/CHANGELOG.md",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "operator workflow documentation",
+    "path": "README.md",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/28df52fd27f7b7767b614cd9bdd8289e92e29130/README.md",
+    "revision": "28df52fd27f7b7767b614cd9bdd8289e92e29130",
+    "status": "tracked"
+  },
+  {
+    "notes": "cataloguing workflow documentation",
+    "path": "README_cataloguing.md",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/28df52fd27f7b7767b614cd9bdd8289e92e29130/README_cataloguing.md",
+    "revision": "28df52fd27f7b7767b614cd9bdd8289e92e29130",
+    "status": "tracked"
+  },
+  {
+    "notes": "repository operating rules",
+    "path": "AGENTS.md",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/28df52fd27f7b7767b614cd9bdd8289e92e29130/AGENTS.md",
+    "revision": "28df52fd27f7b7767b614cd9bdd8289e92e29130",
+    "status": "tracked"
+  },
+  {
+    "notes": "package version and test configuration",
+    "path": "pyproject.toml",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/pyproject.toml",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "semantic catalogue runner",
+    "path": "scripts/catalogue_following_jesus_semantic.py",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/scripts/catalogue_following_jesus_semantic.py",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "rename-plan generator",
+    "path": "scripts/plan_following_jesus_rename.py",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/scripts/plan_following_jesus_rename.py",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "rename apply script",
+    "path": "scripts/rename_following_jesus_files.py",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/scripts/rename_following_jesus_files.py",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "rename validation script",
+    "path": "scripts/validate_following_jesus_rename.py",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/scripts/validate_following_jesus_rename.py",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "semantic analysis library",
+    "path": "src/disk_catalogue/audio_semantic.py",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/src/disk_catalogue/audio_semantic.py",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "rename planning library",
+    "path": "src/disk_catalogue/following_jesus_rename.py",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/src/disk_catalogue/following_jesus_rename.py",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "semantic catalogue tests",
+    "path": "tests/test_audio_semantic.py",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/tests/test_audio_semantic.py",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "rename workflow tests",
+    "path": "tests/test_following_jesus_rename.py",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/tests/test_following_jesus_rename.py",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "tag-triggered release workflow",
+    "path": ".github/workflows/release.yml",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/v1.0.0/.github/workflows/release.yml",
+    "revision": "v1.0.0",
+    "status": "tracked"
+  },
+  {
+    "notes": "post-release CI mypy alignment",
+    "path": ".github/workflows/ci.yml",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/28df52fd27f7b7767b614cd9bdd8289e92e29130/.github/workflows/ci.yml",
+    "revision": "28df52fd27f7b7767b614cd9bdd8289e92e29130",
+    "status": "tracked"
+  },
+  {
+    "notes": "postmortem skill contract",
+    "path": "skills/assistant-postmortem-wiki/SKILL.md",
+    "public_url": "https://github.com/chris-page-gov/disk-catalogue/blob/28df52fd27f7b7767b614cd9bdd8289e92e29130/skills/assistant-postmortem-wiki/SKILL.md",
+    "revision": "28df52fd27f7b7767b614cd9bdd8289e92e29130",
+    "status": "tracked"
+  },
+  {
+    "notes": "generated recovery plans, transcripts, logs, metadata, and evaluations",
+    "path": "output/recovery_plans/following_jesus_team_ext10/",
+    "public_url": "",
+    "revision": "",
+    "status": "local-only"
+  },
+  {
+    "notes": "local catalogue database containing scan and audio catalogue tables",
+    "path": "catalogue.duckdb",
+    "public_url": "",
+    "revision": "",
+    "status": "local-only"
+  },
+  {
+    "notes": "external SSD recovered playable audio tree and renamed fileset",
+    "path": "[EXTSSD_DATA]/",
+    "public_url": "",
+    "revision": "",
+    "status": "local-only"
+  }
+]
