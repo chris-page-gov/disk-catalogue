@@ -104,3 +104,136 @@ FROM photos
 WHERE GPSLatitude IS NULL AND GPSLongitude IS NULL
 ORDER BY DateTimeOriginal NULLS LAST
 LIMIT 100;
+
+-- ---
+-- Following Jesus semantic audio catalogue
+
+-- Processing progress from the semantic catalogue status table
+SELECT status,
+       COUNT(*) AS files,
+       ROUND(SUM(COALESCE(elapsed_seconds, 0)), 1) AS elapsed_s
+FROM audio_semantic_catalogue_status
+GROUP BY 1
+ORDER BY files DESC;
+
+-- Failed semantic audio rows with their latest error
+SELECT file_key,
+       album_folder,
+       file_name,
+       error,
+       failed_at
+FROM audio_semantic_catalogue_status
+WHERE status = 'failed'
+ORDER BY failed_at DESC NULLS LAST, album_folder, file_name;
+
+-- Verification summary for expected files, catalogue sidecars, and transcripts
+SELECT total_files,
+       catalogued_files,
+       transcript_files,
+       missing_catalogue,
+       missing_transcripts,
+       empty_transcripts,
+       short_transcripts,
+       duplicate_audit_complete,
+       exact_duplicate_groups,
+       exact_duplicate_files,
+       folder_duplicate_groups,
+       folder_duplicate_folders,
+       verified_at
+FROM audio_semantic_catalogue_verification;
+
+-- Duplicate audit groups for the Following Jesus semantic catalogue
+SELECT duplicate_kind,
+       duplicate_key,
+       group_count,
+       file_count,
+       album_folders,
+       file_names
+FROM audio_semantic_catalogue_duplicates
+ORDER BY duplicate_kind, file_count DESC, duplicate_key;
+
+-- Embedded/source metadata retained for later re-analysis
+SELECT file_key,
+       album_folder,
+       file_name,
+       title,
+       artist,
+       album,
+       genre,
+       itunes_cddb_ids,
+       itunes_ufid,
+       metadata_json
+FROM audio_semantic_source_metadata
+ORDER BY album_folder, disc_index, track_index
+LIMIT 25;
+
+-- Following Jesus rename plan module counts and sample target paths
+SELECT module_code,
+       COUNT(*) AS tracks,
+       MIN(target_relative_path) AS first_target
+FROM audio_semantic_rename_plan
+GROUP BY 1
+ORDER BY 1;
+
+-- Semantic catalogue rows with low confidence or missing Bible references
+SELECT album_folder,
+       file_name,
+       embedded_title,
+       semantic_title,
+       track_type,
+       bible_reference,
+       metadata_confidence,
+       transcript_path
+FROM audio_semantic_catalogue
+WHERE metadata_confidence <> 'high'
+   OR bible_reference IS NULL
+ORDER BY album_folder, file_name
+LIMIT 100;
+
+-- Bible reference coverage by book
+SELECT COALESCE(bible_book, '(none)') AS bible_book,
+       COUNT(*) AS tracks,
+       LIST(DISTINCT bible_reference) FILTER (WHERE bible_reference IS NOT NULL) AS references
+FROM audio_semantic_catalogue
+GROUP BY 1
+ORDER BY tracks DESC, bible_book;
+
+-- Tracks by inferred type and storying role
+SELECT track_type,
+       storying_role,
+       COUNT(*) AS tracks
+FROM audio_semantic_catalogue
+GROUP BY 1,2
+ORDER BY tracks DESC, track_type, storying_role;
+
+-- Speaker coverage. speaker_names is stored as JSON text in the exported table.
+SELECT speaker.value::VARCHAR AS speaker_name,
+       COUNT(*) AS tracks
+FROM audio_semantic_catalogue,
+     json_each(speaker_names) AS speaker
+GROUP BY 1
+ORDER BY tracks DESC, speaker_name;
+
+-- Keyword search across semantic title, summaries, and keywords JSON
+SELECT album_folder,
+       file_name,
+       semantic_title,
+       bible_reference,
+       summary_short,
+       transcript_path
+FROM audio_semantic_catalogue
+WHERE LOWER(semantic_title) LIKE '%obedience%'
+   OR LOWER(summary_short) LIKE '%obedience%'
+   OR LOWER(summary_long) LIKE '%obedience%'
+   OR LOWER(keywords) LIKE '%obedience%'
+ORDER BY album_folder, file_name
+LIMIT 50;
+
+-- Evaluation scores from optional gold questions
+SELECT question_id,
+       score,
+       max_score,
+       passed,
+       details_json
+FROM audio_semantic_catalogue_eval
+ORDER BY passed, question_id;
