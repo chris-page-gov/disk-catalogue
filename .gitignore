@@ -90,3 +90,10 @@ pm-debug.log*
 
 # Generated docs
 site/
+
+# Private assistant postmortem archives
+/postmortem/
+
+# Local Obsidian vault state
+.obsidian/
+**/.obsidian/

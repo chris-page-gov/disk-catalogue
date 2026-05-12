@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](pyproject.toml)
 
-Version: 0.1.5
+Version: 1.0.0
 
 
 Early-stage toolkit for scanning mounted volumes and exploring metadata (paths, sizes) via DuckDB.
@@ -166,6 +166,29 @@ The naming scheme is:
 
 `scripts/rename_following_jesus_files.py` is dry-run by default. Use `--apply` only after
 reviewing the generated plan and validation report.
+
+## Assistant Postmortem
+
+The assistant-collaboration postmortem uses the repository-local skill at
+`skills/assistant-postmortem-wiki/SKILL.md` and is regenerated with:
+
+```bash
+python tools/build_assistant_postmortem.py
+```
+
+This writes two outputs:
+
+- `postmortem/`: private local archive with raw Codex session sources and full exchange notes.
+  This path is gitignored.
+- `postmortem-public/`: redacted public wiki with summaries, decision registers, artifact
+  registers, and publication lint results.
+
+The generated wikis use standard Markdown links so they render in native VS Code previews while
+remaining valid Obsidian internal links. Exchange notes link to previous/next exchanges, sessions,
+phases, topics, entities, artifacts, roles, and kinds. They also include surrogate-to-detail
+sections, user-prompt to assistant-answer turn pages, timeline and surrogate catalogue pages, and
+machine-readable `graph_nodes.json`, `graph_edges.json`, `facets.json`, and `turns.json`
+registers.
 
 ## Run SQL (container‑friendly)
 

@@ -1,0 +1,25 @@
+{
+  "exchange_count": 3085,
+  "generated_at": "2026-05-09T16:07:13.652855+00:00",
+  "head": "28df52fd27f7b7767b614cd9bdd8289e92e29130",
+  "kinds": {
+    "assistant-message": 333,
+    "call:_create_pull_request": 1,
+    "call:automation_update": 2,
+    "call:close_agent": 1,
+    "call:exec_command": 1154,
+    "call:spawn_agent": 5,
+    "call:update_plan": 15,
+    "call:write_stdin": 138,
+    "message": 13,
+    "tool-output": 1315,
+    "user-message": 108
+  },
+  "roles": {
+    "assistant": 333,
+    "developer": 13,
+    "tool": 2631,
+    "user": 108
+  },
+  "sessions": 6
+}

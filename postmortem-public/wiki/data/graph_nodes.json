@@ -1,0 +1,1457 @@
+[
+  {
+    "id": "exchange:0002-019e09be-agents-md-instructions-for-repo",
+    "kind": "exchange",
+    "label": "0002-019e09be-agents-md-instructions-for-repo"
+  },
+  {
+    "id": "turn:turn-0001-019e09be-agents-md-instructions-for-repo",
+    "kind": "turn",
+    "label": "Turn 1"
+  },
+  {
+    "id": "session:019e09be-f0e7-7211-a66f-d0a174cc4534",
+    "kind": "session",
+    "label": "019e09be"
+  },
+  {
+    "id": "phase:repo-orientation",
+    "kind": "phase",
+    "label": "Repo Orientation"
+  },
+  {
+    "id": "role:user",
+    "kind": "role",
+    "label": "user"
+  },
+  {
+    "id": "kind:user-message",
+    "kind": "kind",
+    "label": "user-message"
+  },
+  {
+    "id": "topic:repo-review",
+    "kind": "topic",
+    "label": "Repo Review"
+  },
+  {
+    "id": "topic:disk-catalogue",
+    "kind": "topic",
+    "label": "Disk Catalogue"
+  },
+  {
+    "id": "topic:drive-recovery",
+    "kind": "topic",
+    "label": "Drive Recovery"
+  },
+  {
+    "id": "topic:verification",
+    "kind": "topic",
+    "label": "Verification"
+  },
+  {
+    "id": "topic:rename-plan",
+    "kind": "topic",
+    "label": "Rename Plan"
+  },
+  {
+    "id": "topic:release-ci",
+    "kind": "topic",
+    "label": "Release and CI"
+  },
+  {
+    "id": "topic:security",
+    "kind": "topic",
+    "label": "Security"
+  },
+  {
+    "id": "entity:duckdb",
+    "kind": "entity",
+    "label": "DuckDB"
+  },
+  {
+    "id": "entity:github",
+    "kind": "entity",
+    "label": "GitHub"
+  },
+  {
+    "id": "entity:github-actions",
+    "kind": "entity",
+    "label": "GitHub Actions"
+  },
+  {
+    "id": "artifact:src-disk-catalogue",
+    "kind": "artifact",
+    "label": "src/disk_catalogue/"
+  },
+  {
+    "id": "artifact:tests",
+    "kind": "artifact",
+    "label": "tests/"
+  },
+  {
+    "id": "artifact:test-py",
+    "kind": "artifact",
+    "label": "test_*.py"
+  },
+  {
+    "id": "artifact:scripts",
+    "kind": "artifact",
+    "label": "scripts/"
+  },
+  {
+    "id": "artifact:output",
+    "kind": "artifact",
+    "label": "output/"
+  },
+  {
+    "id": "artifact:duckdb-schema-sql",
+    "kind": "artifact",
+    "label": "duckdb_schema.sql"
+  },
+  {
+    "id": "artifact:sample-queries-sql",
+    "kind": "artifact",
+    "label": "sample_queries.sql"
+  },
+  {
+    "id": "artifact:drive-manifest-csv",
+    "kind": "artifact",
+    "label": "drive_manifest.csv"
+  },
+  {
+    "id": "artifact:pip-install-e-dev",
+    "kind": "artifact",
+    "label": "pip install -e .[dev]"
+  },
+  {
+    "id": "artifact:uv-pip-install-e-dev",
+    "kind": "artifact",
+    "label": "uv pip install -e .[dev]"
+  },
+  {
+    "id": "artifact:scripts-run-tests-sh",
+    "kind": "artifact",
+    "label": "scripts/run_tests.sh"
+  },
+  {
+    "id": "artifact:scripts-lint-sh",
+    "kind": "artifact",
+    "label": "scripts/lint.sh"
+  },
+  {
+    "id": "artifact:ruff-format",
+    "kind": "artifact",
+    "label": "ruff format "
+  },
+  {
+    "id": "artifact:black",
+    "kind": "artifact",
+    "label": "black "
+  },
+  {
+    "id": "artifact:src",
+    "kind": "artifact",
+    "label": "src/"
+  },
+  {
+    "id": "artifact:pyproject-toml",
+    "kind": "artifact",
+    "label": "pyproject.toml"
+  },
+  {
+    "id": "artifact:commit-template-txt",
+    "kind": "artifact",
+    "label": "commit-template.txt"
+  },
+  {
+    "id": "artifact:changelog-md",
+    "kind": "artifact",
+    "label": "CHANGELOG.md"
+  },
+  {
+    "id": "artifact:readme-md",
+    "kind": "artifact",
+    "label": "README.md"
+  },
+  {
+    "id": "artifact:readme-cataloguing-md",
+    "kind": "artifact",
+    "label": "README_cataloguing.md"
+  },
+  {
+    "id": "exchange:0003-019e09be-review-this-repo-and-its-guiding-documents-like-readme-changelog-agents-cont",
+    "kind": "exchange",
+    "label": "0003-019e09be-review-this-repo-and-its-guiding-documents-like-readme-changelog-agents-cont"
+  },
+  {
+    "id": "turn:turn-0002-019e09be-review-this-repo-and-its-guiding-documents-like-readme-changelog-agents-cont",
+    "kind": "turn",
+    "label": "Turn 2"
+  },
+  {
+    "id": "exchange:0004-019e09be-review-this-repo-and-its-guiding-documents-like-readme-changelog-agents-cont",
+    "kind": "exchange",
+    "label": "0004-019e09be-review-this-repo-and-its-guiding-documents-like-readme-changelog-agents-cont"
+  },
+  {
+    "id": "exchange:0005-019e09be-i-ll-read-the-repo-s-orientation-docs-and-current-git-test-shape-then-i-ll-summ",
+    "kind": "exchange",
+    "label": "0005-019e09be-i-ll-read-the-repo-s-orientation-docs-and-current-git-test-shape-then-i-ll-summ"
+  },
+  {
+    "id": "phase:other",
+    "kind": "phase",
+    "label": "Other"
+  },
+  {
+    "id": "role:assistant",
+    "kind": "role",
+    "label": "assistant"
+  },
+  {
+    "id": "kind:assistant-message",
+    "kind": "kind",
+    "label": "assistant-message"
+  },
+  {
+    "id": "artifact:git-test",
+    "kind": "artifact",
+    "label": "git/test"
+  },
+  {
+    "id": "exchange:0012-019e09be-the-repo-is-small-and-documentation-heavy-i-ve-confirmed-it-is-on-main-one-c",
+    "kind": "exchange",
+    "label": "0012-019e09be-the-repo-is-small-and-documentation-heavy-i-ve-confirmed-it-is-on-main-one-c"
+  },
+  {
+    "id": "artifact:origin-main",
+    "kind": "artifact",
+    "label": "origin/main"
+  },
+  {
+    "id": "exchange:0029-019e09be-the-guiding-docs-point-to-a-two-tier-catalogue-scan-mounted-drives-into-generat",
+    "kind": "exchange",
+    "label": "0029-019e09be-the-guiding-docs-point-to-a-two-tier-catalogue-scan-mounted-drives-into-generat"
+  },
+  {
+    "id": "artifact:scripts-schema",
+    "kind": "artifact",
+    "label": "scripts/schema"
+  },
+  {
+    "id": "exchange:0038-019e09be-there-are-some-local-generated-artifacts-present-in-the-workspace-including-ca",
+    "kind": "exchange",
+    "label": "0038-019e09be-there-are-some-local-generated-artifacts-present-in-the-workspace-including-ca"
+  },
+  {
+    "id": "artifact:catalogue-duckdb",
+    "kind": "artifact",
+    "label": "catalogue.duckdb"
+  },
+  {
+    "id": "artifact:ds-store",
+    "kind": "artifact",
+    "label": "DS_Store"
+  },
+  {
+    "id": "artifact:local-generated",
+    "kind": "artifact",
+    "label": "local/generated"
+  },
+  {
+    "id": "exchange:0049-019e09be-the-local-shell-doesn-t-have-python-on-path-so-i-ll-use-python3-for-the-rea",
+    "kind": "exchange",
+    "label": "0049-019e09be-the-local-shell-doesn-t-have-python-on-path-so-i-ll-use-python3-for-the-rea"
+  },
+  {
+    "id": "exchange:0060-019e09be-duckdb-is-not-installed-in-the-current-python-and-the-duckdb-cli-is-not-on-pat",
+    "kind": "exchange",
+    "label": "0060-019e09be-duckdb-is-not-installed-in-the-current-python-and-the-duckdb-cli-is-not-on-pat"
+  },
+  {
+    "id": "exchange:0069-019e09be-the-database-has-real-catalogue-state-about-1-1-million-file-rows-across-seven",
+    "kind": "exchange",
+    "label": "0069-019e09be-the-database-has-real-catalogue-state-about-1-1-million-file-rows-across-seven"
+  },
+  {
+    "id": "phase:recovery-copy-metadata",
+    "kind": "phase",
+    "label": "Recovery, Copy, Metadata"
+  },
+  {
+    "id": "topic:metadata",
+    "kind": "topic",
+    "label": "Metadata"
+  },
+  {
+    "id": "exchange:0072-019e09be-i-have-enough-to-describe-the-catalogue-state-i-m-running-the-local-pytest-suit",
+    "kind": "exchange",
+    "label": "0072-019e09be-i-have-enough-to-describe-the-catalogue-state-i-m-running-the-local-pytest-suit"
+  },
+  {
+    "id": "exchange:0078-019e09be-the-tests-pass-with-one-expected-looking-skip-the-sample-query-test-skips-becau",
+    "kind": "exchange",
+    "label": "0078-019e09be-the-tests-pass-with-one-expected-looking-skip-the-sample-query-test-skips-becau"
+  },
+  {
+    "id": "artifact:uv-lock",
+    "kind": "artifact",
+    "label": "/uv.lock"
+  },
+  {
+    "id": "exchange:0089-019e09be-the-ci-config-intentionally-makes-ruff-strict-but-lets-format-checks-be-advisory",
+    "kind": "exchange",
+    "label": "0089-019e09be-the-ci-config-intentionally-makes-ruff-strict-but-lets-format-checks-be-advisory"
+  },
+  {
+    "id": "artifact:ci-script",
+    "kind": "artifact",
+    "label": "CI/script"
+  },
+  {
+    "id": "artifact:lint-type",
+    "kind": "artifact",
+    "label": "lint/type"
+  },
+  {
+    "id": "exchange:0094-019e09be-uv-regenerated-uv-lock-during-lint-i-ll-remove-it-again-the-working-tree-o",
+    "kind": "exchange",
+    "label": "0094-019e09be-uv-regenerated-uv-lock-during-lint-i-ll-remove-it-again-the-working-tree-o"
+  },
+  {
+    "id": "topic:conversation-mechanics",
+    "kind": "topic",
+    "label": "conversation-mechanics"
+  },
+  {
+    "id": "exchange:0113-019e09be-one-workspace-side-effect-remains-uv-created-a-local-venv-for-the-checks",
+    "kind": "exchange",
+    "label": "0113-019e09be-one-workspace-side-effect-remains-uv-created-a-local-venv-for-the-checks"
+  },
+  {
+    "id": "artifact:venv",
+    "kind": "artifact",
+    "label": "venv"
+  },
+  {
+    "id": "exchange:0118-019e09be-i-reviewed-the-repo-docs-scripts-schema-notes-current-database-and-checks-n",
+    "kind": "exchange",
+    "label": "0118-019e09be-i-reviewed-the-repo-docs-scripts-schema-notes-current-database-and-checks-n"
+  },
+  {
+    "id": "entity:ext-10",
+    "kind": "entity",
+    "label": "Ext-10"
+  },
+  {
+    "id": "artifact:scripts-scan-and-ingest-py",
+    "kind": "artifact",
+    "label": "scripts/scan_and_ingest.py"
+  },
+  {
+    "id": "artifact:output-drive",
+    "kind": "artifact",
+    "label": "output/<drive>/"
+  },
+  {
+    "id": "artifact:files-photos-videos",
+    "kind": "artifact",
+    "label": "files/photos/videos"
+  },
+  {
+    "id": "artifact:0-1-5",
+    "kind": "artifact",
+    "label": "0.1.5"
+  },
+  {
+    "id": "artifact:v0-1-5",
+    "kind": "artifact",
+    "label": "v0.1.5"
+  },
+  {
+    "id": "artifact:scripts-generate-schema-reference-py",
+    "kind": "artifact",
+    "label": "scripts/generate_schema_reference.py"
+  },
+  {
+    "id": "artifact:typing-iterable",
+    "kind": "artifact",
+    "label": "typing.Iterable"
+  },
+  {
+    "id": "artifact:schema-reference-md",
+    "kind": "artifact",
+    "label": "SCHEMA_REFERENCE.md"
+  },
+  {
+    "id": "artifact:csv-list",
+    "kind": "artifact",
+    "label": "CSV/list"
+  },
+  {
+    "id": "artifact:snapshot-history",
+    "kind": "artifact",
+    "label": "snapshot/history"
+  },
+  {
+    "id": "artifact:camera-lens",
+    "kind": "artifact",
+    "label": "camera/lens"
+  },
+  {
+    "id": "artifact:file-path-size-media",
+    "kind": "artifact",
+    "label": "file/path/size/media"
+  },
+  {
+    "id": "exchange:0119-019e09be-so-i-m-looking-for-an-old-music-library-ripped-from-cd-of-avery-willis-storying",
+    "kind": "exchange",
+    "label": "0119-019e09be-so-i-m-looking-for-an-old-music-library-ripped-from-cd-of-avery-willis-storying"
+  },
+  {
+    "id": "turn:turn-0003-019e09be-so-i-m-looking-for-an-old-music-library-ripped-from-cd-of-avery-willis-storying",
+    "kind": "turn",
+    "label": "Turn 3"
+  },
+  {
+    "id": "phase:material-discovery",
+    "kind": "phase",
+    "label": "Material Discovery"
+  },
+  {
+    "id": "topic:following-jesus",
+    "kind": "topic",
+    "label": "Following Jesus"
+  },
+  {
+    "id": "entity:avery-willis",
+    "kind": "entity",
+    "label": "Avery Willis"
+  },
+  {
+    "id": "exchange:0120-019e09be-so-i-m-looking-for-an-old-music-library-ripped-from-cd-of-avery-willis-storying",
+    "kind": "exchange",
+    "label": "0120-019e09be-so-i-m-looking-for-an-old-music-library-ripped-from-cd-of-avery-willis-storying"
+  },
+  {
+    "id": "exchange:0121-019e09be-i-ll-query-the-local-duckdb-only-looking-broadly-first-for-avery-willis",
+    "kind": "exchange",
+    "label": "0121-019e09be-i-ll-query-the-local-duckdb-only-looking-broadly-first-for-avery-willis"
+  },
+  {
+    "id": "artifact:cd-audio",
+    "kind": "artifact",
+    "label": "CD/audio"
+  },
+  {
+    "id": "exchange:0124-019e09be-i-ve-confirmed-the-catalogue-s-files-view-has-the-fields-needed-for-this-driv",
+    "kind": "exchange",
+    "label": "0124-019e09be-i-ve-confirmed-the-catalogue-s-files-view-has-the-fields-needed-for-this-driv"
+  },
+  {
+    "id": "exchange:0129-019e09be-the-first-pass-found-strong-candidates-the-most-relevant-cluster-is-on-ext-12",
+    "kind": "exchange",
+    "label": "0129-019e09be-the-first-pass-found-strong-candidates-the-most-relevant-cluster-is-on-ext-12"
+  },
+  {
+    "id": "topic:duplicates",
+    "kind": "topic",
+    "label": "Duplicates"
+  },
+  {
+    "id": "entity:following-jesus",
+    "kind": "entity",
+    "label": "Following Jesus"
+  },
+  {
+    "id": "entity:itunes",
+    "kind": "entity",
+    "label": "iTunes"
+  },
+  {
+    "id": "artifact:avery-willis-following-jesus-together-disc-2",
+    "kind": "artifact",
+    "label": "Avery Willis/Following Jesus Together Disc 2"
+  },
+  {
+    "id": "artifact:windows-public",
+    "kind": "artifact",
+    "label": "Windows/Public"
+  },
+  {
+    "id": "artifact:willis-following",
+    "kind": "artifact",
+    "label": "Willis/Following"
+  },
+  {
+    "id": "artifact:itunes-amazon",
+    "kind": "artifact",
+    "label": "iTunes/Amazon"
+  },
+  {
+    "id": "exchange:0134-019e09be-the-exact-avery-willis-path-is-narrow-37-audio-files-all-on-ext-12-a-broa",
+    "kind": "exchange",
+    "label": "0134-019e09be-the-exact-avery-willis-path-is-narrow-37-audio-files-all-on-ext-12-a-broa"
+  },
+  {
+    "id": "artifact:cd-set-itunes",
+    "kind": "artifact",
+    "label": "CD-set/iTunes"
+  },
+  {
+    "id": "exchange:0137-019e09be-i-m-going-to-write-this-as-generated-recovery-planning-material-under-output-re",
+    "kind": "exchange",
+    "label": "0137-019e09be-i-m-going-to-write-this-as-generated-recovery-planning-material-under-output-re"
+  },
+  {
+    "id": "topic:semantic-catalogue",
+    "kind": "topic",
+    "label": "Semantic Catalogue"
+  },
+  {
+    "id": "artifact:output-recovery-plans-avery-willis-storying",
+    "kind": "artifact",
+    "label": "output/recovery_plans/avery_willis_storying"
+  },
+  {
+    "id": "exchange:0156-019e09be-i-ve-generated-the-recovery-plan-and-checked-the-copy-helper-s-cli-loads-correct",
+    "kind": "exchange",
+    "label": "0156-019e09be-i-ve-generated-the-recovery-plan-and-checked-the-copy-helper-s-cli-loads-correct"
+  },
+  {
+    "id": "exchange:0161-019e09be-no-add-it-to-a-gitignore",
+    "kind": "exchange",
+    "label": "0161-019e09be-no-add-it-to-a-gitignore"
+  },
+  {
+    "id": "turn:turn-0004-019e09be-no-add-it-to-a-gitignore",
+    "kind": "turn",
+    "label": "Turn 4"
+  },
+  {
+    "id": "exchange:0162-019e09be-no-add-it-to-a-gitignore",
+    "kind": "exchange",
+    "label": "0162-019e09be-no-add-it-to-a-gitignore"
+  },
+  {
+    "id": "exchange:0163-019e09be-got-it-i-ll-keep-the-local-environment-alone-and-add-the-generated-uv-lock-to",
+    "kind": "exchange",
+    "label": "0163-019e09be-got-it-i-ll-keep-the-local-environment-alone-and-add-the-generated-uv-lock-to"
+  },
+  {
+    "id": "artifact:gitignore",
+    "kind": "artifact",
+    "label": "gitignore"
+  },
+  {
+    "id": "exchange:0166-019e09be-i-added-root-uv-lock-to-gitignore-repo-gitig",
+    "kind": "exchange",
+    "label": "0166-019e09be-i-added-root-uv-lock-to-gitignore-repo-gitig"
+  },
+  {
+    "id": "artifact:storying-401-m4v",
+    "kind": "artifact",
+    "label": "Storying 401.m4v"
+  },
+  {
+    "id": "artifact:users-public-music-avery-willis-following-jesus-together-disc-2",
+    "kind": "artifact",
+    "label": "/Users/Public/Music/Avery Willis/Following Jesus Together Disc 2"
+  },
+  {
+    "id": "artifact:disciple-lithuania-following-jesus-together",
+    "kind": "artifact",
+    "label": "Disciple Lithuania/Following Jesus Together"
+  },
+  {
+    "id": "artifact:jayne-r-discipleship-following-jesus-together",
+    "kind": "artifact",
+    "label": "Jayne R/Discipleship - Following Jesus Together"
+  },
+  {
+    "id": "artifact:repo-gitignore",
+    "kind": "artifact",
+    "label": "[REPO]/.gitignore"
+  },
+  {
+    "id": "artifact:repo-changelog-md",
+    "kind": "artifact",
+    "label": "[REPO]/CHANGELOG.md"
+  },
+  {
+    "id": "artifact:output-recovery-plans-avery-willis-storying-readme-md",
+    "kind": "artifact",
+    "label": "output/recovery_plans/avery_willis_storying/README.md"
+  },
+  {
+    "id": "artifact:repo-output-recovery-plans-avery-willis-storying-readme-md",
+    "kind": "artifact",
+    "label": "[REPO]/output/recovery_plans/avery_willis_storying/README.md"
+  },
+  {
+    "id": "artifact:recovery-manifest-csv",
+    "kind": "artifact",
+    "label": "recovery_manifest.csv"
+  },
+  {
+    "id": "artifact:repo-output-recovery-plans-avery-willis-storying-recovery-manifest-csv",
+    "kind": "artifact",
+    "label": "[REPO]/output/recovery_plans/avery_willis_storying/recovery_manifest.csv"
+  },
+  {
+    "id": "artifact:source-candidates-csv",
+    "kind": "artifact",
+    "label": "source_candidates.csv"
+  },
+  {
+    "id": "artifact:repo-output-recovery-plans-avery-willis-storying-source-candidates-csv",
+    "kind": "artifact",
+    "label": "[REPO]/output/recovery_plans/avery_willis_storying/source_candidates.csv"
+  },
+  {
+    "id": "artifact:duplicate-fallback",
+    "kind": "artifact",
+    "label": "duplicate/fallback"
+  },
+  {
+    "id": "artifact:directory-summary-csv",
+    "kind": "artifact",
+    "label": "directory_summary.csv"
+  },
+  {
+    "id": "artifact:repo-output-recovery-plans-avery-willis-storying-directory-summary-csv",
+    "kind": "artifact",
+    "label": "[REPO]/output/recovery_plans/avery_willis_storying/directory_summary.csv"
+  },
+  {
+    "id": "artifact:related-non-audio-csv",
+    "kind": "artifact",
+    "label": "related_non_audio.csv"
+  },
+  {
+    "id": "artifact:repo-output-recovery-plans-avery-willis-storying-related-non-audio-csv",
+    "kind": "artifact",
+    "label": "[REPO]/output/recovery_plans/avery_willis_storying/related_non_audio.csv"
+  },
+  {
+    "id": "exchange:0167-019e09be-environment-context",
+    "kind": "exchange",
+    "label": "0167-019e09be-environment-context"
+  },
+  {
+    "id": "turn:turn-0005-019e09be-environment-context",
+    "kind": "turn",
+    "label": "Turn 5"
+  },
+  {
+    "id": "artifact:europe-london",
+    "kind": "artifact",
+    "label": "Europe/London"
+  },
+  {
+    "id": "exchange:0168-019e09be-can-you-detail-what-is-known-about-the-broader-itunes-following-jesus-team-mate",
+    "kind": "exchange",
+    "label": "0168-019e09be-can-you-detail-what-is-known-about-the-broader-itunes-following-jesus-team-mate"
+  },
+  {
+    "id": "turn:turn-0006-019e09be-can-you-detail-what-is-known-about-the-broader-itunes-following-jesus-team-mate",
+    "kind": "turn",
+    "label": "Turn 6"
+  },
+  {
+    "id": "exchange:0169-019e09be-can-you-detail-what-is-known-about-the-broader-itunes-following-jesus-team-mate",
+    "kind": "exchange",
+    "label": "0169-019e09be-can-you-detail-what-is-known-about-the-broader-itunes-following-jesus-team-mate"
+  },
+  {
+    "id": "exchange:0170-019e09be-i-ll-query-the-catalogue-for-that-exact-ext-10-primary-itunes-tree-then-break-i",
+    "kind": "exchange",
+    "label": "0170-019e09be-i-ll-query-the-catalogue-for-that-exact-ext-10-primary-itunes-tree-then-break-i"
+  },
+  {
+    "id": "phase:full-semantic-catalogue",
+    "kind": "phase",
+    "label": "Full Semantic Catalogue"
+  },
+  {
+    "id": "exchange:0173-019e09be-the-catalogue-only-has-file-level-metadata-for-these-m4a-files-not-embedded-itu",
+    "kind": "exchange",
+    "label": "0173-019e09be-the-catalogue-only-has-file-level-metadata-for-these-m4a-files-not-embedded-itu"
+  },
+  {
+    "id": "artifact:disc-track",
+    "kind": "artifact",
+    "label": "disc/track"
+  },
+  {
+    "id": "exchange:0180-019e09be-i-queried-the-local-catalogue-duckdb-no-disks-were-mounted",
+    "kind": "exchange",
+    "label": "0180-019e09be-i-queried-the-local-catalogue-duckdb-no-disks-were-mounted"
+  },
+  {
+    "id": "artifact:ext-10-dell-xps-chris-music-itunes-itunes-media-music-following-jesus-team",
+    "kind": "artifact",
+    "label": "[EXT_10]/Dell XPS/Chris/Music/iTunes/iTunes Media/Music/Following Jesus Team/"
+  },
+  {
+    "id": "artifact:albumartsmall-jpg",
+    "kind": "artifact",
+    "label": "AlbumArtSmall.jpg"
+  },
+  {
+    "id": "artifact:folder-jpg",
+    "kind": "artifact",
+    "label": "Folder.jpg"
+  },
+  {
+    "id": "artifact:video-quicktime",
+    "kind": "artifact",
+    "label": "video/quicktime"
+  },
+  {
+    "id": "artifact:m4a",
+    "kind": "artifact",
+    "label": "m4a"
+  },
+  {
+    "id": "artifact:1-01-intro-m4a",
+    "kind": "artifact",
+    "label": "1-01 Intro.m4a"
+  },
+  {
+    "id": "artifact:1-02-the-following-jesus-team-m4a",
+    "kind": "artifact",
+    "label": "1-02 The Following Jesus Team.m4a"
+  },
+  {
+    "id": "artifact:1-03-avery-s-welcome-m4a",
+    "kind": "artifact",
+    "label": "1-03 Avery's Welcome.m4a"
+  },
+  {
+    "id": "artifact:1-04-the-10-step-process-m4a",
+    "kind": "artifact",
+    "label": "1-04 The 10 Step Process.m4a"
+  },
+  {
+    "id": "artifact:3-12-track-12-m4a",
+    "kind": "artifact",
+    "label": "3-12 Track 12.m4a"
+  },
+  {
+    "id": "artifact:ext-10-dell-xps-chris-music-itunes-copy-itunes-media-music-following-jesus-team",
+    "kind": "artifact",
+    "label": "[EXT_10]/Dell XPS/Chris/Music/iTunes - Copy/iTunes Media/Music/Following Jesus Team/"
+  },
+  {
+    "id": "artifact:itunes-itunes-media",
+    "kind": "artifact",
+    "label": "iTunes/iTunes Media/"
+  },
+  {
+    "id": "artifact:itunes-copy",
+    "kind": "artifact",
+    "label": "iTunes - Copy/"
+  },
+  {
+    "id": "artifact:avery-willis-storying-recovery-medium-confidence-following-jesus-team-itunes-lib",
+    "kind": "artifact",
+    "label": "Avery Willis Storying Recovery/Medium Confidence/Following Jesus Team iTunes Library/"
+  },
+  {
+    "id": "artifact:ext-10-dell",
+    "kind": "artifact",
+    "label": "[EXT_10]/Dell"
+  },
+  {
+    "id": "artifact:xps-chris-music-itunes-itunes",
+    "kind": "artifact",
+    "label": "XPS/Chris/Music/iTunes/iTunes"
+  },
+  {
+    "id": "artifact:media-music-following",
+    "kind": "artifact",
+    "label": "Media/Music/Following"
+  },
+  {
+    "id": "artifact:itunes-cd-rip",
+    "kind": "artifact",
+    "label": "iTunes/CD-rip"
+  },
+  {
+    "id": "artifact:xps-chris-music-itunes",
+    "kind": "artifact",
+    "label": "XPS/Chris/Music/iTunes"
+  },
+  {
+    "id": "exchange:0181-019e09be-can-you-find-references-to-this-material-online-which-would-give-us-the-track-na",
+    "kind": "exchange",
+    "label": "0181-019e09be-can-you-find-references-to-this-material-online-which-would-give-us-the-track-na"
+  },
+  {
+    "id": "turn:turn-0007-019e09be-can-you-find-references-to-this-material-online-which-would-give-us-the-track-na",
+    "kind": "turn",
+    "label": "Turn 7"
+  },
+  {
+    "id": "exchange:0182-019e09be-can-you-find-references-to-this-material-online-which-would-give-us-the-track-na",
+    "kind": "exchange",
+    "label": "0182-019e09be-can-you-find-references-to-this-material-online-which-would-give-us-the-track-na"
+  },
+  {
+    "id": "exchange:0183-019e09be-i-ll-search-the-web-for-public-references-to-the-following-jesus-team-avery-wi",
+    "kind": "exchange",
+    "label": "0183-019e09be-i-ll-search-the-web-for-public-references-to-the-following-jesus-team-avery-wi"
+  },
+  {
+    "id": "exchange:0184-019e09be-i-found-useful-references-but-not-a-complete-public-track-listing-for-all-1-536",
+    "kind": "exchange",
+    "label": "0184-019e09be-i-found-useful-references-but-not-a-complete-public-track-listing-for-all-1-536"
+  },
+  {
+    "id": "entity:progressive-vision",
+    "kind": "entity",
+    "label": "Progressive Vision"
+  },
+  {
+    "id": "artifact:following-jesus-making-disciples-of-pri-1-03-wake-up-to-orality-and-literacy-m4a",
+    "kind": "artifact",
+    "label": "Following Jesus--Making Disciples Of Pri/1-03 Wake Up To Orality And Literacy.m4a"
+  },
+  {
+    "id": "artifact:1-01-introduction-m4a",
+    "kind": "artifact",
+    "label": "1-01 Introduction.m4a"
+  },
+  {
+    "id": "artifact:1-02-world-of-pols-m4a",
+    "kind": "artifact",
+    "label": "1-02 World Of POLs.m4a"
+  },
+  {
+    "id": "artifact:1-03-wake-up-to-orality-and-literacy-m4a",
+    "kind": "artifact",
+    "label": "1-03 Wake Up To Orality And Literacy.m4a"
+  },
+  {
+    "id": "artifact:1-04-cbs-with-the-han-m4a",
+    "kind": "artifact",
+    "label": "1-04 CBS With The Han.m4a"
+  },
+  {
+    "id": "artifact:1-05-bible-translation-and-pols-m4a",
+    "kind": "artifact",
+    "label": "1-05 Bible Translation And POLs.m4a"
+  },
+  {
+    "id": "artifact:1-09-an-oral-bible-m4a",
+    "kind": "artifact",
+    "label": "1-09 An Oral Bible.m4a"
+  },
+  {
+    "id": "artifact:01-impact-of-cbs-on-cpms-m4a",
+    "kind": "artifact",
+    "label": "01 Impact Of CBS On CPMs.m4a"
+  },
+  {
+    "id": "artifact:02-challenge-to-disciple-pols-m4a",
+    "kind": "artifact",
+    "label": "02 Challenge To Disciple POLs.m4a"
+  },
+  {
+    "id": "artifact:03-introduction-to-worldview-m4a",
+    "kind": "artifact",
+    "label": "03 Introduction To Worldview.m4a"
+  },
+  {
+    "id": "artifact:07-the-role-of-dialog-m4a",
+    "kind": "artifact",
+    "label": "07 The Role Of Dialog.m4a"
+  },
+  {
+    "id": "artifact:08-frequently-asked-questions-m4a",
+    "kind": "artifact",
+    "label": "08 Frequently Asked Questions.m4a"
+  },
+  {
+    "id": "artifact:19-post-session-coaching-m4a",
+    "kind": "artifact",
+    "label": "19 Post Session Coaching.m4a"
+  },
+  {
+    "id": "artifact:track-nn-m4a",
+    "kind": "artifact",
+    "label": "Track NN.m4a"
+  },
+  {
+    "id": "artifact:lausanne-org-occasional-paper-making-disciples-oral-learners-lop-54",
+    "kind": "artifact",
+    "label": "lausanne.org/occasional-paper/making-disciples-oral-learners-lop-54"
+  },
+  {
+    "id": "artifact:story4all-libsyn-com-s4a005-wake-up-to-orality-literacy",
+    "kind": "artifact",
+    "label": "story4all.libsyn.com/s4a005-wake-up-to-orality-literacy"
+  },
+  {
+    "id": "artifact:thealabamabaptist-org-storying-training-breaks-illiteracy-barrier",
+    "kind": "artifact",
+    "label": "thealabamabaptist.org/storying-training-breaks-illiteracy-barrier"
+  },
+  {
+    "id": "artifact:megavoice-com-media-cloud-m033857-following-jesus-making-disciples-of-primary-or",
+    "kind": "artifact",
+    "label": "megavoice.com/media-cloud/m033857-following-jesus-making-disciples-of-primary-oral-learners-eng-english-audio-bible"
+  },
+  {
+    "id": "artifact:rip-import",
+    "kind": "artifact",
+    "label": "rip/import"
+  },
+  {
+    "id": "artifact:duplicate-transition",
+    "kind": "artifact",
+    "label": "duplicate/transition"
+  },
+  {
+    "id": "exchange:0185-019e09be-i-ve-now-connected-the-ext-10-drive-and-an-ssd-called-extssd-data",
+    "kind": "exchange",
+    "label": "0185-019e09be-i-ve-now-connected-the-ext-10-drive-and-an-ssd-called-extssd-data"
+  },
+  {
+    "id": "turn:turn-0008-019e09be-i-ve-now-connected-the-ext-10-drive-and-an-ssd-called-extssd-data",
+    "kind": "turn",
+    "label": "Turn 8"
+  },
+  {
+    "id": "topic:transcription",
+    "kind": "topic",
+    "label": "Transcription"
+  },
+  {
+    "id": "topic:diarization",
+    "kind": "topic",
+    "label": "Diarization"
+  },
+  {
+    "id": "entity:extssd-data",
+    "kind": "entity",
+    "label": "ExtSSD-Data"
+  },
+  {
+    "id": "exchange:0186-019e09be-i-ve-now-connected-the-ext-10-drive-and-an-ssd-called-extssd-data",
+    "kind": "exchange",
+    "label": "0186-019e09be-i-ve-now-connected-the-ext-10-drive-and-an-ssd-called-extssd-data"
+  },
+  {
+    "id": "exchange:0187-019e09be-i-ll-treat-ext-10-as-the-source-and-extssd-data-as-the-destination-i-ll-fir",
+    "kind": "exchange",
+    "label": "0187-019e09be-i-ll-treat-ext-10-as-the-source-and-extssd-data-as-the-destination-i-ll-fir"
+  },
+  {
+    "id": "artifact:metadata-transcription",
+    "kind": "artifact",
+    "label": "metadata/transcription"
+  },
+  {
+    "id": "exchange:0198-019e09be-both-drives-are-mounted-extssd-data-has-about-1-1-tib-free-and-the-target-se",
+    "kind": "exchange",
+    "label": "0198-019e09be-both-drives-are-mounted-extssd-data-has-about-1-1-tib-free-and-the-target-se"
+  },
+  {
+    "id": "exchange:0203-019e09be-i-generated-a-focused-manifest-for-the-1-536-m4a-files-and-verified-every-source",
+    "kind": "exchange",
+    "label": "0203-019e09be-i-generated-a-focused-manifest-for-the-1-536-m4a-files-and-verified-every-source"
+  },
+  {
+    "id": "exchange:0214-019e09be-the-copy-is-running-it-is-a-multi-gigabyte-transfer-from-a-nearly-full-external",
+    "kind": "exchange",
+    "label": "0214-019e09be-the-copy-is-running-it-is-a-multi-gigabyte-transfer-from-a-nearly-full-external"
+  },
+  {
+    "id": "exchange:0217-019e09be-the-file-copy-completed-cleanly-i-m-now-checking-the-destination-count-and-byte",
+    "kind": "exchange",
+    "label": "0217-019e09be-the-file-copy-completed-cleanly-i-m-now-checking-the-destination-count-and-byte"
+  },
+  {
+    "id": "exchange:0220-019e09be-destination-verification-passed-1-536-m4a-files-copied-no-missing-files-no-si",
+    "kind": "exchange",
+    "label": "0220-019e09be-destination-verification-passed-1-536-m4a-files-copied-no-missing-files-no-si"
+  },
+  {
+    "id": "artifact:tags-duration-codec",
+    "kind": "artifact",
+    "label": "tags/duration/codec"
+  },
+  {
+    "id": "exchange:0229-019e09be-metadata-extraction-completed-for-all-1-536-copied-m4a-files-the-embedded-tags",
+    "kind": "exchange",
+    "label": "0229-019e09be-metadata-extraction-completed-for-all-1-536-copied-m4a-files-the-embedded-tags"
+  },
+  {
+    "id": "artifact:track-disc",
+    "kind": "artifact",
+    "label": "track/disc"
+  },
+  {
+    "id": "artifact:itunes-cddb",
+    "kind": "artifact",
+    "label": "iTunes/CDDB"
+  },
+  {
+    "id": "exchange:0232-019e09be-the-database-now-has-a-new-audio-recovery-files-table-populated-with-all-1-536",
+    "kind": "exchange",
+    "label": "0232-019e09be-the-database-now-has-a-new-audio-recovery-files-table-populated-with-all-1-536"
+  },
+  {
+    "id": "artifact:title-artist-album-disc-track",
+    "kind": "artifact",
+    "label": "title/artist/album/disc/track"
+  },
+  {
+    "id": "exchange:0251-019e09be-there-is-no-local-whisper-style-transcription-cli-installed-so-i-ll-use-the-con",
+    "kind": "exchange",
+    "label": "0251-019e09be-there-is-no-local-whisper-style-transcription-cli-installed-so-i-ll-use-the-con"
+  },
+  {
+    "id": "entity:whisper-cpp",
+    "kind": "entity",
+    "label": "whisper.cpp"
+  },
+  {
+    "id": "exchange:0262-019e09be-i-selected-eight-sample-tracks-one-per-album-folder-for-generic-track-folders",
+    "kind": "exchange",
+    "label": "0262-019e09be-i-selected-eight-sample-tracks-one-per-album-folder-for-generic-track-folders"
+  },
+  {
+    "id": "exchange:0267-019e09be-the-openai-transcription-api-is-reachable-but-the-configured-api-key-is-quota-l",
+    "kind": "exchange",
+    "label": "0267-019e09be-the-openai-transcription-api-is-reachable-but-the-configured-api-key-is-quota-l"
+  },
+  {
+    "id": "artifact:local-offline",
+    "kind": "artifact",
+    "label": "local/offline"
+  },
+  {
+    "id": "exchange:0289-019e09be-whisper-cpp-is-installed-locally-now-it-includes-a-small-test-model-but-not-f",
+    "kind": "exchange",
+    "label": "0289-019e09be-whisper-cpp-is-installed-locally-now-it-includes-a-small-test-model-but-not-f"
+  },
+  {
+    "id": "phase:transcription-sampling",
+    "kind": "phase",
+    "label": "Transcription Sampling"
+  },
+  {
+    "id": "artifact:base-en",
+    "kind": "artifact",
+    "label": "base.en"
+  },
+  {
+    "id": "exchange:0308-019e09be-the-bundled-whisper-cpp-test-model-is-not-usable-for-real-transcription-it-load",
+    "kind": "exchange",
+    "label": "0308-019e09be-the-bundled-whisper-cpp-test-model-is-not-usable-for-real-transcription-it-load"
+  },
+  {
+    "id": "exchange:0327-019e09be-the-real-local-whisper-model-works-the-first-sample-produced-a-coherent-transcr",
+    "kind": "exchange",
+    "label": "0327-019e09be-the-real-local-whisper-model-works-the-first-sample-produced-a-coherent-transcr"
+  },
+  {
+    "id": "exchange:0334-019e09be-the-local-transcription-run-is-progressing-and-writing-transcript-txt-plus",
+    "kind": "exchange",
+    "label": "0334-019e09be-the-local-transcription-run-is-progressing-and-writing-transcript-txt-plus"
+  },
+  {
+    "id": "artifact:transcript-txt",
+    "kind": "artifact",
+    "label": "transcript.txt"
+  },
+  {
+    "id": "artifact:transcript-srt",
+    "kind": "artifact",
+    "label": "transcript.srt"
+  },
+  {
+    "id": "exchange:0343-019e09be-all-eight-sample-transcripts-are-complete-i-m-now-adding-them-to-the-database-w",
+    "kind": "exchange",
+    "label": "0343-019e09be-all-eight-sample-transcripts-are-complete-i-m-now-adding-them-to-the-database-w"
+  },
+  {
+    "id": "exchange:0346-019e09be-the-transcript-samples-and-summaries-are-now-in-the-database-in-audio-transcrip",
+    "kind": "exchange",
+    "label": "0346-019e09be-the-transcript-samples-and-summaries-are-now-in-the-database-in-audio-transcrip"
+  },
+  {
+    "id": "artifact:catalogue-md",
+    "kind": "artifact",
+    "label": "catalogue.md"
+  },
+  {
+    "id": "exchange:0367-019e09be-done-the-copied-library-is-ready-to-play-on-the-ssd-here",
+    "kind": "exchange",
+    "label": "0367-019e09be-done-the-copied-library-is-ready-to-play-on-the-ssd-here"
+  },
+  {
+    "id": "artifact:50-06",
+    "kind": "artifact",
+    "label": "50.06"
+  },
+  {
+    "id": "artifact:extssd-data-avery",
+    "kind": "artifact",
+    "label": "[EXTSSD_DATA]/Avery"
+  },
+  {
+    "id": "artifact:audio-following",
+    "kind": "artifact",
+    "label": "Audio/Following"
+  },
+  {
+    "id": "artifact:readme-recovery-md",
+    "kind": "artifact",
+    "label": "README_RECOVERY.md"
+  },
+  {
+    "id": "artifact:audio-readme-recovery-md",
+    "kind": "artifact",
+    "label": "Audio/README_RECOVERY.md"
+  },
+  {
+    "id": "artifact:transcript-sample-analysis-md",
+    "kind": "artifact",
+    "label": "transcript_sample_analysis.md"
+  },
+  {
+    "id": "artifact:repo-output-recovery-plans-following-jesus-team-ext10-transcript-sample-analysis",
+    "kind": "artifact",
+    "label": "[REPO]/output/recovery_plans/following_jesus_team_ext10/transcript_sample_analysis.md"
+  },
+  {
+    "id": "artifact:roundtable-orality",
+    "kind": "artifact",
+    "label": "roundtable/orality"
+  },
+  {
+    "id": "exchange:0368-019e09be-great-do-we-need-a-different-model-or-system-to-have-speaker-recognition-i-d-l",
+    "kind": "exchange",
+    "label": "0368-019e09be-great-do-we-need-a-different-model-or-system-to-have-speaker-recognition-i-d-l"
+  },
+  {
+    "id": "turn:turn-0009-019e09be-great-do-we-need-a-different-model-or-system-to-have-speaker-recognition-i-d-l",
+    "kind": "turn",
+    "label": "Turn 9"
+  },
+  {
+    "id": "phase:speaker-diarization",
+    "kind": "phase",
+    "label": "Speaker Diarization"
+  },
+  {
+    "id": "exchange:0369-019e09be-great-do-we-need-a-different-model-or-system-to-have-speaker-recognition-i-d-l",
+    "kind": "exchange",
+    "label": "0369-019e09be-great-do-we-need-a-different-model-or-system-to-have-speaker-recognition-i-d-l"
+  },
+  {
+    "id": "exchange:0370-019e09be-i-ll-separate-two-problems-speaker-diarization-speaker-a-b-c-spoke-here-and",
+    "kind": "exchange",
+    "label": "0370-019e09be-i-ll-separate-two-problems-speaker-diarization-speaker-a-b-c-spoke-here-and"
+  },
+  {
+    "id": "artifact:a-b-c",
+    "kind": "artifact",
+    "label": "A/B/C"
+  },
+  {
+    "id": "exchange:0371-019e09be-yes-whisper-gives-transcription-it-does-not-reliably-identify-speakers-by",
+    "kind": "exchange",
+    "label": "0371-019e09be-yes-whisper-gives-transcription-it-does-not-reliably-identify-speakers-by"
+  },
+  {
+    "id": "entity:pyannote-audio",
+    "kind": "entity",
+    "label": "pyannote.audio"
+  },
+  {
+    "id": "artifact:huggingface-co-pyannote-speaker-diarization",
+    "kind": "artifact",
+    "label": "huggingface.co/pyannote/speaker-diarization"
+  },
+  {
+    "id": "artifact:huggingface-co-pyannote-embedding",
+    "kind": "artifact",
+    "label": "huggingface.co/pyannote/embedding"
+  },
+  {
+    "id": "artifact:docs-pyannote-ai-tutorials-identification-with-voiceprints",
+    "kind": "artifact",
+    "label": "docs.pyannote.ai/tutorials/identification-with-voiceprints"
+  },
+  {
+    "id": "artifact:known-unknown",
+    "kind": "artifact",
+    "label": "known/unknown"
+  },
+  {
+    "id": "artifact:embedding-voiceprint",
+    "kind": "artifact",
+    "label": "embedding/voiceprint"
+  },
+  {
+    "id": "artifact:start-end",
+    "kind": "artifact",
+    "label": "start/end"
+  },
+  {
+    "id": "artifact:avery-jim-grant",
+    "kind": "artifact",
+    "label": "Avery/Jim/Grant"
+  },
+  {
+    "id": "exchange:0372-019e09be-compare-this-to-using-davinci-resolve-to-do-this",
+    "kind": "exchange",
+    "label": "0372-019e09be-compare-this-to-using-davinci-resolve-to-do-this"
+  },
+  {
+    "id": "turn:turn-0010-019e09be-compare-this-to-using-davinci-resolve-to-do-this",
+    "kind": "turn",
+    "label": "Turn 10"
+  },
+  {
+    "id": "entity:davinci-resolve",
+    "kind": "entity",
+    "label": "DaVinci Resolve"
+  },
+  {
+    "id": "exchange:0373-019e09be-compare-this-to-using-davinci-resolve-to-do-this",
+    "kind": "exchange",
+    "label": "0373-019e09be-compare-this-to-using-davinci-resolve-to-do-this"
+  },
+  {
+    "id": "exchange:0374-019e09be-i-ll-check-current-resolve-capabilities-rather-than-rely-on-memory-then-compare",
+    "kind": "exchange",
+    "label": "0374-019e09be-i-ll-check-current-resolve-capabilities-rather-than-rely-on-memory-then-compare"
+  },
+  {
+    "id": "artifact:archive-database",
+    "kind": "artifact",
+    "label": "archive/database"
+  },
+  {
+    "id": "exchange:0375-019e09be-resolve-is-useful-here-but-i-would-not-make-it-the-primary-cataloguing-system",
+    "kind": "exchange",
+    "label": "0375-019e09be-resolve-is-useful-here-but-i-would-not-make-it-the-primary-cataloguing-system"
+  },
+  {
+    "id": "artifact:text-00-00-14-2-00-00-31-8-avery-willis-00-00-31-8-00-00-45-1-grant-lovejoy",
+    "kind": "artifact",
+    "label": "text\n00:00:14.2-00:00:31.8  Avery Willis\n00:00:31.8-00:00:45.1  Grant Lovejoy\n"
+  },
+  {
+    "id": "artifact:listening-review",
+    "kind": "artifact",
+    "label": "listening/review"
+  },
+  {
+    "id": "artifact:m4a-itunes",
+    "kind": "artifact",
+    "label": "M4A/iTunes"
+  },
+  {
+    "id": "artifact:limited-export",
+    "kind": "artifact",
+    "label": "Limited/export"
+  },
+  {
+    "id": "artifact:samples-files",
+    "kind": "artifact",
+    "label": "samples/files"
+  },
+  {
+    "id": "artifact:pyannote-whisperx-style",
+    "kind": "artifact",
+    "label": "pyannote/WhisperX-style"
+  },
+  {
+    "id": "artifact:embeddings-voiceprints",
+    "kind": "artifact",
+    "label": "embeddings/voiceprints"
+  },
+  {
+    "id": "artifact:text-file",
+    "kind": "artifact",
+    "label": "text/file"
+  },
+  {
+    "id": "artifact:scripting-plugins",
+    "kind": "artifact",
+    "label": "scripting/plugins"
+  },
+  {
+    "id": "artifact:subtitles-timed",
+    "kind": "artifact",
+    "label": "subtitles/timed"
+  },
+  {
+    "id": "artifact:20-21",
+    "kind": "artifact",
+    "label": "20/21"
+  },
+  {
+    "id": "artifact:speaker-audio-lip",
+    "kind": "artifact",
+    "label": "speaker/audio/lip"
+  },
+  {
+    "id": "artifact:research-archive",
+    "kind": "artifact",
+    "label": "research/archive"
+  },
+  {
+    "id": "artifact:python-duckdb",
+    "kind": "artifact",
+    "label": "Python/DuckDB"
+  },
+  {
+    "id": "artifact:srt-vtt-csv",
+    "kind": "artifact",
+    "label": "SRT/VTT/CSV"
+  },
+  {
+    "id": "artifact:transcript-speaker",
+    "kind": "artifact",
+    "label": "transcript/speaker"
+  },
+  {
+    "id": "artifact:transcripts-subtitles",
+    "kind": "artifact",
+    "label": "transcripts/subtitles"
+  },
+  {
+    "id": "exchange:0377-019e09be-agents-md-instructions-for-repo",
+    "kind": "exchange",
+    "label": "0377-019e09be-agents-md-instructions-for-repo"
+  },
+  {
+    "id": "turn:turn-0011-019e09be-agents-md-instructions-for-repo",
+    "kind": "turn",
+    "label": "Turn 11"
+  },
+  {
+    "id": "exchange:0378-019e09be-use-pyannote-audio-locally-for-diarization-and-speaker-embeddings",
+    "kind": "exchange",
+    "label": "0378-019e09be-use-pyannote-audio-locally-for-diarization-and-speaker-embeddings"
+  },
+  {
+    "id": "turn:turn-0012-019e09be-use-pyannote-audio-locally-for-diarization-and-speaker-embeddings",
+    "kind": "turn",
+    "label": "Turn 12"
+  },
+  {
+    "id": "exchange:0379-019e09be-use-pyannote-audio-locally-for-diarization-and-speaker-embeddings",
+    "kind": "exchange",
+    "label": "0379-019e09be-use-pyannote-audio-locally-for-diarization-and-speaker-embeddings"
+  },
+  {
+    "id": "exchange:0380-019e09be-i-ll-treat-this-as-an-end-to-end-local-experiment-inspect-the-existing-catalogu",
+    "kind": "exchange",
+    "label": "0380-019e09be-i-ll-treat-this-as-an-end-to-end-local-experiment-inspect-the-existing-catalogu"
+  },
+  {
+    "id": "exchange:0389-019e09be-the-repo-doesn-t-currently-have-diarization-code-or-speaker-tables-so-i-m-check",
+    "kind": "exchange",
+    "label": "0389-019e09be-the-repo-doesn-t-currently-have-diarization-code-or-speaker-tables-so-i-m-check"
+  },
+  {
+    "id": "artifact:python-audio",
+    "kind": "artifact",
+    "label": "Python/audio"
+  },
+  {
+    "id": "exchange:0406-019e09be-the-sample-set-and-database-are-in-place-the-missing-piece-is-the-ml-stack-py",
+    "kind": "exchange",
+    "label": "0406-019e09be-the-sample-set-and-database-are-in-place-the-missing-piece-is-the-ml-stack-py"
+  },
+  {
+    "id": "artifact:token-cache",
+    "kind": "artifact",
+    "label": "token/cache"
+  },
+  {
+    "id": "exchange:0413-019e09be-there-is-no-local-hugging-face-token-and-no-cached-pyannote-model-i-ll-install",
+    "kind": "exchange",
+    "label": "0413-019e09be-there-is-no-local-hugging-face-token-and-no-cached-pyannote-model-i-ll-install"
+  },
+  {
+    "id": "exchange:0418-019e09be-the-package-stack-is-now-available-via-uv-run-with-next-i-m-checking-wh",
+    "kind": "exchange",
+    "label": "0418-019e09be-the-package-stack-is-now-available-via-uv-run-with-next-i-m-checking-wh"
+  },
+  {
+    "id": "artifact:uv-run-with",
+    "kind": "artifact",
+    "label": "uv run --with "
+  },
+  {
+    "id": "exchange:0425-019e09be-the-official-pyannote-models-are-gated-without-a-token-but-an-openly-accessible",
+    "kind": "exchange",
+    "label": "0425-019e09be-the-official-pyannote-models-are-gated-without-a-token-but-an-openly-accessible"
+  },
+  {
+    "id": "artifact:pyannote-audio",
+    "kind": "artifact",
+    "label": "pyannote.audio"
+  },
+  {
+    "id": "artifact:database-report",
+    "kind": "artifact",
+    "label": "database/report"
+  },
+  {
+    "id": "exchange:0448-019e09be-the-first-diarization-run-is-processing-the-longest-sample-locally-on-cpu-that",
+    "kind": "exchange",
+    "label": "0448-019e09be-the-first-diarization-run-is-processing-the-longest-sample-locally-on-cpu-that"
+  },
+  {
+    "id": "exchange:0451-019e09be-can-t-it-use-the-apple-gpu",
+    "kind": "exchange",
+    "label": "0451-019e09be-can-t-it-use-the-apple-gpu"
+  },
+  {
+    "id": "turn:turn-0013-019e09be-can-t-it-use-the-apple-gpu",
+    "kind": "turn",
+    "label": "Turn 13"
+  },
+  {
+    "id": "exchange:0452-019e09be-can-t-it-use-the-apple-gpu",
+    "kind": "exchange",
+    "label": "0452-019e09be-can-t-it-use-the-apple-gpu"
+  },
+  {
+    "id": "exchange:0453-019e09be-yes-on-apple-silicon-it-should-be-able-to-use-pytorch-s-mps-backend-but-pyan",
+    "kind": "exchange",
+    "label": "0453-019e09be-yes-on-apple-silicon-it-should-be-able-to-use-pytorch-s-mps-backend-but-pyan"
+  },
+  {
+    "id": "artifact:pipeline-model",
+    "kind": "artifact",
+    "label": "pipeline/model"
+  },
+  {
+    "id": "exchange:0464-019e09be-mps-is-available-and-the-pyannote-pipeline-exposes-to-so-i-m-going-to-u",
+    "kind": "exchange",
+    "label": "0464-019e09be-mps-is-available-and-the-pyannote-pipeline-exposes-to-so-i-m-going-to-u"
+  },
+  {
+    "id": "artifact:to",
+    "kind": "artifact",
+    "label": "to("
+  },
+  {
+    "id": "artifact:pipeline-to-torch-device-mps",
+    "kind": "artifact",
+    "label": "pipeline.to(torch.device(\"mps\""
+  }
+]

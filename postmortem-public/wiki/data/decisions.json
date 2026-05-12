@@ -1,0 +1,50 @@
+[
+  {
+    "decision": "Use the disk catalogue database as the source of truth.",
+    "id": "D001",
+    "outcome": "All recovery, transcript, duplicate, and rename artefacts were tied back to DuckDB.",
+    "rationale": "The database already had stable drive/file identifiers and scan history."
+  },
+  {
+    "decision": "Copy recovered M4A files to an external SSD before semantic processing.",
+    "id": "D002",
+    "outcome": "Later work proceeded without the Ext-10 source drive attached.",
+    "rationale": "The source drive could then be ejected and the long-running process could continue."
+  },
+  {
+    "decision": "Keep long-running transcription resumable and checkpointed.",
+    "id": "D003",
+    "outcome": "State, logs, verification exports, and evaluation exports were generated.",
+    "rationale": "The library contained 1,536 files and unattended completion required status checks."
+  },
+  {
+    "decision": "Add completeness and duplicate validation before declaring completion.",
+    "id": "D004",
+    "outcome": "Duration coverage and duplicate-audit outputs became part of final verification.",
+    "rationale": "Partial transcripts and folder-level duplication were explicit user concerns."
+  },
+  {
+    "decision": "Use pyannote locally for diarization experiments.",
+    "id": "D005",
+    "outcome": "Sample diarization tables and an effectiveness report were created in the local database.",
+    "rationale": "The user wanted local speaker recognition with a small known speaker set."
+  },
+  {
+    "decision": "Publish `v1.0.0` after merging the semantic catalogue branch to `main`.",
+    "id": "D006",
+    "outcome": "The GitHub release workflow published wheel and source assets for `v1.0.0`.",
+    "rationale": "The project had crossed from scanning utility into full recovery/catalogue workflow."
+  },
+  {
+    "decision": "Keep full assistant transcripts private and publish a redacted derivative.",
+    "id": "D007",
+    "outcome": "The full archive is ignored in `postmortem/`; `postmortem-public/` is publishable.",
+    "rationale": "Raw sessions contain local paths, account state, and generated operational details."
+  },
+  {
+    "decision": "Treat Markdown rendering compatibility as a publication quality gate.",
+    "id": "D008",
+    "outcome": "The generator now emits standard Markdown links, turn pages, escaped public detail, meaningful headings, and publication lint checks for those regressions.",
+    "rationale": "Obsidian and VS Code exposed broken table links, raw HTML folding, flattened redacted details, and filename-like headings that made the archive hard to use."
+  }
+]
